@@ -1,10 +1,10 @@
 import abc
 import pandas as pd 
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
+import random
+from datetime import datetime
 
 class Caracterizacao:
     def __init__(self,idade,genero,ano_academico,horas_estudo_dia,pressao_provas,performance_academica,nivel_extresse,nivel_ansiedade,nivel_depressao,horas_sono,atividade_fisica,suporte_social,tempo_tela,uso_internet,extresse_financeiro,expectativa_familiar):
@@ -236,6 +236,17 @@ class Arvore(ModeloIA):
         nova_previsao = ia_arvore.predict(novos_usuarios)
         return nova_previsao
 
+class DormirCedo:
+    def motivar(self):
+        return random.choice(["Dormir cedo hoje é investir em uma versão mais forte de você amanhã.","Seu corpo precisa de descanso tanto quanto sua mente precisa de foco.","Quem dorme cedo não perde tempo — ganha energia.","A disciplina de hoje é o sucesso de amanhã começando no seu sono.","Desligar agora é escolher acordar melhor depois.","Não é sobre dormir menos, é sobre viver melhor.","A noite bem dormida é o primeiro passo de um dia produtivo.","Seu futuro agradece cada hora de sono que você respeita hoje."])
+    
+    def calular_sono(self,inicio,fim):
+        t1 = datetime.strptime(inicio,"%H:%M")
+        t2 = datetime.strptime(fim,"%H:%M")
+        if t2 < t1:
+            t2 = t2.replace(day=2)
+        return t2 - t1
+
 class Usuario:
     def __init__(self,nome, senha, caracterizacao):
         self.nome = nome
@@ -254,3 +265,4 @@ class Usuario:
         pass
     def adicionar_conquista(self):
         pass
+
