@@ -247,6 +247,12 @@ class DormirCedo:
             t2 = t2.replace(day=2)
         return t2 - t1
 
+class AtividadeFisica:
+    def motivar(self):
+        return random.choice(["Seu corpo pode até pedir para parar, mas sua mente decide continuar.","Um treino hoje é um passo a menos em direção à sua melhor versão.","Disciplina vence a motivação quando a vontade acaba.","Você não treina só o corpo, treina a mente também.","O esforço de hoje é o resultado de amanhã.","Não espere sentir vontade, crie o hábito.","Cada gota de suor te aproxima do seu objetivo.","O limite começa onde sua determinação acaba.","Treinar é investir em você mesmo.","Você é mais forte do que a desculpa que tentou te parar."])
+    def calcular_IMC(self,peso,altura):
+        return peso/(altura**2)
+
 class Usuario:
     def __init__(self,nome, senha, caracterizacao):
         self.nome = nome
