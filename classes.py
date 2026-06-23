@@ -208,7 +208,7 @@ class ModeloIA(abc.ABC):
     def prever(self):
         pass
 
-class knn(ModeloIA):
+class Knn(ModeloIA):
     def prever(self):
         tabela = pd.read_csv("student_mental_health_burnout_1M.csv")
         tradutor = LabelEncoder() 
@@ -222,7 +222,7 @@ class knn(ModeloIA):
         nova_previsao = ia_knn.predict(novos_usuarios)
         return nova_previsao
 
-class arvore(ModeloIA):
+class Arvore(ModeloIA):
     def prever(self):
         tabela = pd.read_csv("student_mental_health_burnout_1M.csv")
         tradutor = LabelEncoder() 
@@ -244,8 +244,12 @@ class Usuario:
         self.habitos = []
         self.conquistas = []
 
-    def prever(self):
-        pass
+    def prever(self,modelo):
+        if modelo == 'knn':
+            Knn('knn').prever()
+        elif modelo == 'arvore':
+            Arvore('arvore').prever()
+
     def acessar_habitos(self):
         pass
     def adicionar_conquista(self):
