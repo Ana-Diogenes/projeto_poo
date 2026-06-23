@@ -1,3 +1,11 @@
+import abc
+import pandas as pd 
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
 class Caracterizacao:
     def __init__(self,idade,genero,ano_academico,horas_estudo_dia,pressao_provas,performance_academica,nivel_extresse,nivel_ansiedade,nivel_depressao,horas_sono,atividade_fisica,suporte_social,tempo_tela,uso_internet,extresse_financeiro,expectativa_familiar):
             self.__idade = idade
@@ -192,7 +200,42 @@ class Caracterizacao:
                     self.__expectativa_familiar = valor
                     return True
                 return False
-              
+
+class ModeloIA(abc.ABC):
+    def __init__(self,nome):
+        self.nome = nome
+    @abc.abstractmethod
+    def prever(self):
+        pass
+
+class knn(ModeloIA):
+    def prever(self):
+        tabela = pd.read_csv("student_mental_health_burnout_1M.csv")
+        tradutor = LabelEncoder() 
+        tabela['gender'] = tradutor.fit_transform(tabela['gender'])
+        x = tabela.drop(['burnout_score','mental_health_index','risk_level','dropout_risk'], axis=1)
+        y = tabela ['risk_level']
+        ia_knn = KNeighborsClassifier()
+        ia_knn.fit(x,y)
+        novos_usuarios = pd.read_csv('novos.csv').drop(['burnout_score','mental_health_index','dropout_risk'], axis=1)
+        novos_usuarios['gender'] = tradutor.transform(novos_usuarios['gender'])
+        nova_previsao = ia_knn.predict(novos_usuarios)
+        return nova_previsao
+
+class arvore(ModeloIA):
+    def prever(self):
+        tabela = pd.read_csv("student_mental_health_burnout_1M.csv")
+        tradutor = LabelEncoder() 
+        tabela['gender'] = tradutor.fit_transform(tabela['gender'])
+        x = tabela.drop(['burnout_score','mental_health_index','risk_level','dropout_risk'], axis=1)
+        y = tabela ['risk_level']
+        ia_arvore = RandomForestClassifier()
+        ia_arvore.fit(x,y)
+        novos_usuarios = pd.read_csv('novos.csv').drop(['burnout_score','mental_health_index','dropout_risk'], axis=1)
+        novos_usuarios['gender'] = tradutor.transform(novos_usuarios['gender'])
+        nova_previsao = ia_arvore.predict(novos_usuarios)
+        return nova_previsao
+
 class Usuario:
     def __init__(self,nome, senha, caracterizacao):
         self.nome = nome
