@@ -259,19 +259,26 @@ class Leitura:
     def calcular_media(self,paginas,dias):
         return paginas/dias
 
-class Usuario:
+class AtividadeMixin:
+    def registrar_atividade(usuario,atividade):
+        return f'{usuario} - {atividade}'
+
+class Usuario (AtividadeMixin):
     def __init__(self,nome, senha, caracterizacao):
         self.nome = nome
         self.senha = senha
         self.caracteristicas= caracterizacao
         self.habitos = []
         self.conquistas = []
+        self.registrar_atividade(self.nome,'criou conta')
 
     def prever(self,modelo):
         if modelo == 'knn':
             Knn('knn').prever()
+            self.registrar_atividade(self.nome,'fez previsão com KNeighbors')
         elif modelo == 'arvore':
             Arvore('arvore').prever()
+            self.registrar_atividade(self.nome,'fez previsão com RandomForest')
 
     def acessar_habitos(self):
         pass
