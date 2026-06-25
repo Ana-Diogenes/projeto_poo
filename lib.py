@@ -8,14 +8,14 @@ from datetime import datetime
 import csv
 
 class Caracterizacao:
-    def __init__(self,idade,genero,ano_academico,horas_estudo_dia,pressao_provas,performance_academica,nivel_extresse,nivel_ansiedade,nivel_depressao,horas_sono,atividade_fisica,suporte_social,tempo_tela,uso_internet,extresse_financeiro,expectativa_familiar):
+    def __init__(self,idade,genero,ano_academico,horas_estudo_dia,pressao_provas,performance_academica,nivel_estresse,nivel_ansiedade,nivel_depressao,horas_sono,atividade_fisica,suporte_social,tempo_tela,uso_internet,estresse_financeiro,expectativa_familiar):
             self.__idade = idade
             self.__genero = genero
             self.__ano_academico = ano_academico
             self.__horas_estudo_dia = horas_estudo_dia
             self.__pressao_provas = pressao_provas
             self.__performance_academica = performance_academica
-            self.__nivel_extresse = nivel_extresse
+            self.__nivel_estresse = nivel_estresse
             self.__nivel_ansiedade = nivel_ansiedade
             self.__nivel_depressao = nivel_depressao
             self.__horas_sono = horas_sono
@@ -23,185 +23,185 @@ class Caracterizacao:
             self.__suporte_social = suporte_social
             self.__tempo_tela = tempo_tela
             self.__uso_internet = uso_internet
-            self.__extresse_financeiro = extresse_financeiro
+            self.__estresse_financeiro = estresse_financeiro
             self.__expectativa_familiar = expectativa_familiar
+    @property
+    def idade(self):
+        return self.__idade
 
-            @property
-            def idade(self):
-                return self.__idade
+    @idade.setter
+    def idade(self, valor):
+        if type(valor) == int:
+            self.__idade = valor
+            return True
+        return False
 
-            @idade.setter
-            def idade(self, valor):
-                if type(valor) == int:
-                    self.__idade = valor
-                    return True
-                return False
+    @property
+    def genero(self):
+        return self.__genero
 
-            @property
-            def genero(self):
-                return self.__genero
+    @genero.setter
+    def genero(self, valor):
+        if type(valor) == str:
+            self.__genero = valor
+            return True
+        return False
 
-            @genero.setter
-            def genero(self, valor):
-                if type(valor) == str:
-                    self.__genero = valor
-                    return True
-                return False
+    @property
+    def ano_academico(self):
+        return self.__ano_academico
 
-            @property
-            def ano_academico(self):
-                return self.__ano_academico
+    @ano_academico.setter
+    def ano_academico(self, valor):
+        if type(valor) == int:
+            self.__ano_academico = valor
+            return True
+        return False
 
-            @ano_academico.setter
-            def ano_academico(self, valor):
-                if type(valor) == int:
-                    self.__ano_academico = valor
-                    return True
-                return False
+    @property
+    def horas_estudo_dia(self):
+        return self.__horas_estudo_dia
 
-            @property
-            def horas_estudo_dia(self):
-                return self.__horas_estudo_dia
+    @horas_estudo_dia.setter
+    def horas_estudo_dia(self, valor):
+        if type(valor) == float:
+            self.__horas_estudo_dia = valor
+            return True
+        return False
 
-            @horas_estudo_dia.setter
-            def horas_estudo_dia(self, valor):
-                if type(valor) == float:
-                    self.__horas_estudo_dia = valor
-                    return True
-                return False
+    @property
+    def pressao_provas(self):
+        return self.__pressao_provas
 
-            @property
-            def pressao_provas(self):
-                return self.__pressao_provas
+    @pressao_provas.setter
+    def pressao_provas(self, valor):
+        if type(valor) == float:
+            self.__pressao_provas = valor
+            return True
+        return False
 
-            @pressao_provas.setter
-            def pressao_provas(self, valor):
-                if type(valor) == float:
-                    self.__pressao_provas = valor
-                    return True
-                return False
+    @property
+    def performance_academica(self):
+        return self.__performance_academica
 
-            @property
-            def performance_academica(self):
-                return self.__performance_academica
+    @performance_academica.setter
+    def performance_academica(self, valor):
+        if type(valor) == float:
+            self.__performance_academica = valor
+            return True
+        return False
 
-            @performance_academica.setter
-            def performance_academica(self, valor):
-                if type(valor) == float:
-                    self.__performance_academica = valor
-                    return True
-                return False
+    @property
+    def nivel_estresse(self):
+        return self.__nivel_estresse
 
-            @property
-            def nivel_extresse(self):
-                return self.__nivel_extresse
+    @nivel_estresse.setter
+    def nivel_estresse(self, valor):
+        if type(valor) == float:
+            self.__nivel_estresse = valor
+            return True
+        return False
 
-            @nivel_extresse.setter
-            def nivel_extresse(self, valor):
-                if type(valor) == float:
-                    self.__nivel_extresse = valor
-                    return True
-                return False
+    @property
+    def nivel_ansiedade(self):
+        return self.__nivel_ansiedade
 
-            @property
-            def nivel_ansiedade(self):
-                return self.__nivel_ansiedade
+    @nivel_ansiedade.setter
+    def nivel_ansiedade(self, valor):
+        if type(valor) == float:
+            self.__nivel_ansiedade = valor
+            return True
+        return False
 
-            @nivel_ansiedade.setter
-            def nivel_ansiedade(self, valor):
-                if type(valor) == float:
-                    self.__nivel_ansiedade = valor
-                    return True
-                return False
+    @property
+    def nivel_depressao(self):
+        return self.__nivel_depressao
 
-            @property
-            def nivel_depressao(self):
-                return self.__nivel_depressao
+    @nivel_depressao.setter
+    def nivel_depressao(self, valor):
+        if type(valor) == float:
+            self.__nivel_depressao = valor
+            return True
+        return False
 
-            @nivel_depressao.setter
-            def nivel_depressao(self, valor):
-                if type(valor) == float:
-                    self.__nivel_depressao = valor
-                    return True
-                return False
+    @property
+    def horas_sono(self):
+        return self.__horas_sono
 
-            @property
-            def horas_sono(self):
-                return self.__horas_sono
+    @horas_sono.setter
+    def horas_sono(self, valor):
+        if type(valor) == float:
+            self.__horas_sono = valor
+            return True
+        return False
 
-            @horas_sono.setter
-            def horas_sono(self, valor):
-                if type(valor) == float:
-                    self.__horas_sono = valor
-                    return True
-                return False
+    @property
+    def atividade_fisica(self):
+        return self.__atividade_fisica
 
-            @property
-            def atividade_fisica(self):
-                return self.__atividade_fisica
+    @atividade_fisica.setter
+    def atividade_fisica(self, valor):
+        if type(valor) == float:
+            self.__atividade_fisica = valor
+            return True
+        return False
 
-            @atividade_fisica.setter
-            def atividade_fisica(self, valor):
-                if type(valor) == float:
-                    self.__atividade_fisica = valor
-                    return True
-                return False
+    @property
+    def suporte_social(self):
+        return self.__suporte_social
 
-            @property
-            def suporte_social(self):
-                return self.__suporte_social
+    @suporte_social.setter
+    def suporte_social(self, valor):
+        if type(valor) == float:
+            self.__suporte_social = valor
+            return True
+        return False
 
-            @suporte_social.setter
-            def suporte_social(self, valor):
-                if type(valor) == float:
-                    self.__suporte_social = valor
-                    return True
-                return False
+    @property
+    def tempo_tela(self):
+        return self.__tempo_tela
 
-            @property
-            def tempo_tela(self):
-                return self.__tempo_tela
+    @tempo_tela.setter
+    def tempo_tela(self, valor):
+        if type(valor) == float:
+            self.__tempo_tela = valor
+            return True
+        return False
 
-            @tempo_tela.setter
-            def tempo_tela(self, valor):
-                if type(valor) == float:
-                    self.__tempo_tela = valor
-                    return True
-                return False
+    @property
+    def uso_internet(self):
+        return self.__uso_internet
 
-            @property
-            def uso_internet(self):
-                return self.__uso_internet
+    @uso_internet.setter
+    def uso_internet(self, valor):
+        if type(valor) == float:
+            self.__uso_internet = valor
+            return True
+        return False
 
-            @uso_internet.setter
-            def uso_internet(self, valor):
-                if type(valor) == float:
-                    self.__uso_internet = valor
-                    return True
-                return False
+    @property
+    def estresse_financeiro(self):
+        return self.__estresse_financeiro
+    
+    @estresse_financeiro.setter
+    def estresse_financeiro(self, valor):
+        if type(valor) == float:
+            self.__estresse_financeiro = valor
+            return True
+        return False
 
-            @property
-            def estresse_financeiro(self):
-                return self.__extresse_financeiro
+    @property
+    def expectativa_familiar(self):
+        return self.__expectativa_familiar
 
-            @estresse_financeiro.setter
-            def estresse_financeiro(self, valor):
-                if type(valor) == float:
-                    self.__extresse_financeiro = valor
-                    return True
-                return False
+    @expectativa_familiar.setter
+    def expectativa_familiar(self, valor):
+        if type(valor) == float:
+            self.__expectativa_familiar = valor
+            return True
+        return False
 
-            @property
-            def expectativa_familiar(self):
-                return self.__expectativa_familiar
-
-            @expectativa_familiar.setter
-            def expectativa_familiar(self, valor):
-                if type(valor) == float:
-                    self.__expectativa_familiar = valor
-                    return True
-                return False
-
+    
 class ModeloIA(abc.ABC):
     def __init__(self,nome):
         self.nome = nome
@@ -218,7 +218,9 @@ class Knn(ModeloIA):
         y = tabela ['risk_level']
         ia_knn = KNeighborsClassifier()
         ia_knn.fit(x,y)
-        previsao = pd.DataFrame([{'idade': dados.idade,'genero': dados.genero,'ano_academico': dados.ano_academico,'horas_estudo_dia': dados.horas_estudo_dia,'pressao_provas': dados.pressao_provas,'performance_academica': dados.performance_academica,'nivel_extresse': dados.nivel_extresse,'nivel_ansiedade': dados.nivel_ansiedade,'nivel_depressao': dados.nivel_depressao,'horas_sono': dados.horas_sono,'atividade_fisica': dados.atividade_fisica,'suporte_social': dados.suporte_social,'tempo_tela': dados.tempo_tela,'uso_internet': dados.uso_internet,'extresse_financeiro': dados.extresse_financeiro,'expectativa_familiar': dados.expectativa_familiar}])
+        previsao = pd.DataFrame([{'age': dados.idade,'gender': dados.genero,'academic_year': dados.ano_academico,'study_hours_per_day': dados.horas_estudo_dia,'exam_pressure': dados.pressao_provas,
+    'academic_performance': dados.performance_academica,'stress_level': dados.nivel_estresse,'anxiety_score': dados.nivel_ansiedade,'depression_score': dados.nivel_depressao,'sleep_hours': dados.horas_sono,'physical_activity': dados.atividade_fisica,'social_support': dados.suporte_social,'screen_time': dados.tempo_tela,'internet_usage': dados.uso_internet,'financial_stress': dados.estresse_financeiro,'family_expectation': dados.expectativa_familiar,'burnout_score': dados.burnout_score,'mental_health_index': dados.mental_health_index,'risk_level': dados.risk_level,'dropout_risk': dados.dropout_risk
+}])
         previsao['gender'] = tradutor.transform(previsao['gender'])
         nova_previsao = ia_knn.predict(previsao)
         return nova_previsao
@@ -232,7 +234,7 @@ class Arvore(ModeloIA):
         y = tabela ['risk_level']
         ia_arvore = RandomForestClassifier()
         ia_arvore.fit(x,y)
-        previsao = pd.DataFrame([{'idade': dados.idade,'genero': dados.genero,'ano_academico': dados.ano_academico,'horas_estudo_dia': dados.horas_estudo_dia,'pressao_provas': dados.pressao_provas,'performance_academica': dados.performance_academica,'nivel_extresse': dados.nivel_extresse,'nivel_ansiedade': dados.nivel_ansiedade,'nivel_depressao': dados.nivel_depressao,'horas_sono': dados.horas_sono,'atividade_fisica': dados.atividade_fisica,'suporte_social': dados.suporte_social,'tempo_tela': dados.tempo_tela,'uso_internet': dados.uso_internet,'extresse_financeiro': dados.extresse_financeiro,'expectativa_familiar': dados.expectativa_familiar}])
+        previsao = pd.DataFrame([{'idade': dados.idade,'genero': dados.genero,'ano_academico': dados.ano_academico,'horas_estudo_dia': dados.horas_estudo_dia,'pressao_provas': dados.pressao_provas,'performance_academica': dados.performance_academica,'nivel_estresse': dados.nivel_estresse,'nivel_ansiedade': dados.nivel_ansiedade,'nivel_depressao': dados.nivel_depressao,'horas_sono': dados.horas_sono,'atividade_fisica': dados.atividade_fisica,'suporte_social': dados.suporte_social,'tempo_tela': dados.tempo_tela,'uso_internet': dados.uso_internet,'estresse_financeiro': dados.estresse_financeiro,'expectativa_familiar': dados.expectativa_familiar}])
         previsao['gender'] = tradutor.transform(previsao['gender'])
         nova_previsao = ia_arvore.predict(previsao)
         return nova_previsao
@@ -291,7 +293,7 @@ def atualizar_sistema(usuario):
             if (linha [0]).lower() != (usuario.nome).lower():
                 lista_nova.append(linha)
             elif (linha [0]).lower() == (usuario.nome).lower():
-                lista_nova.append([usuario.nome,usuario.senha,usuario.caracteristicas.__dict__.values(),usuario.atividades.__dict__.values(),usuario.habitos__dict__.values(),usuario.conquistas.__dict__.values()])
+                lista_nova.append([usuario.nome,usuario.senha,usuario.caracteristicas,usuario.atividades,usuario.habitos,usuario.conquistas])
     with open ('usuarios.csv','w') as users: 
         for i,linha in enumerate(lista_nova):
             if i==0:
@@ -309,17 +311,17 @@ class Usuario (AtividadeMixin):
         self.habitos = []
         self.conquistas = []
         self.atividades.append(self.registrar_atividade('criou conta'))
-        sistema + Usuario
+        sistema += self
 
     def prever(self,modelo):
         if modelo == 'knn':
-            Knn('knn').prever(self.caracteristicas)
             self.atividades.append(self.registrar_atividade('fez previsão com KNeighbors'))
             atualizar_sistema(self)
+            return Knn('knn').prever(self.caracteristicas)
         elif modelo == 'arvore':
-            Arvore('arvore').prever(self.caracteristicas)
             self.atividades.append(self.registrar_atividade('fez previsão com RandomForest'))
             atualizar_sistema(self)
+            return Arvore('arvore').prever(self.caracteristicas)
 
     def adicionar_conquista(self, nome):
         self.conquistas.append(Conquista(nome))
@@ -333,10 +335,11 @@ class Sistema:
             users = list(csv.reader(lista_usuarios, delimiter=","))
         self.usuarios = users
 
-    def __iadd__(self, usuario):
+    def __add__(self, usuario):
         with open('usuarios.csv',"a") as usuarios: 
-            usuarios.write(f'{usuario.nome},{usuario.senha},{usuario.caracteristicas.__dict__.values()},{usuario.atividades.__dict__.values()},{usuario.habitos__dict__.values()},{usuario.conquistas.__dict__.values()}')
-    def __isub__(self, usuario):
+            usuarios.write(f'{usuario.nome},{usuario.senha},{usuario.caracteristicas},{usuario.atividades},{usuario.habitos},{usuario.conquistas}')
+        return self
+    def __sub__(self, usuario):
         lista_nova = []
         achou = False
         with open('usuarios.csv',"r") as usuarios:
@@ -347,14 +350,14 @@ class Sistema:
                 elif (linha [0]).lower() == (usuario.nome).lower():
                     achou = True
         if achou == False: 
-            return False
+            return self
         with open ('usuarios.csv','w') as users: 
             for i,linha in enumerate(lista_nova):
                 if i==0:
                     users.write(linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
                 else:
                     users.write('\n'+linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
-        return True
+        return self
 
 class AcessarSistema(abc.ABC):
     @abc.abstractmethod
@@ -363,8 +366,6 @@ class AcessarSistema(abc.ABC):
 
 class Dev(Usuario,AcessarSistema):
     senha_dev = 'DevDoSistema'
-    def __init__(self, nome, senha):
-        super().__init__(nome, senha)
     
     def listar_usuarios(sistema):
         return sistema.usuarios
