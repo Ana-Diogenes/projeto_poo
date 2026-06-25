@@ -282,32 +282,53 @@ class Conquista:
     def __init__(self,nome):
         self.nome = nome
 
+def atualizar_sistema(usuario):
+    dados = usuario.sistema.usuarios
+    lista_nova = []
+    with open('usuarios.csv',"r") as usuarios:
+        lista_usuarios = csv.reader(usuarios, delimiter=",")
+        for linha in lista_usuarios:
+            if (linha [0]).lower() != (usuario.nome).lower():
+                lista_nova.append(linha)
+            elif (linha [0]).lower() == (usuario.nome).lower():
+                lista_nova.append([usuario.nome,usuario.senha,usuario.caracteristicas.__dict__.values(),usuario.atividades.__dict__.values(),usuario.habitos__dict__.values(),usuario.conquistas.__dict__.values()])
+    with open ('usuarios.csv','w') as users: 
+        for i,linha in enumerate(lista_nova):
+            if i==0:
+                users.write(linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
+            else:
+                users.write('\n'+linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
+
 class Usuario (AtividadeMixin):
-    def __init__(self,nome, senha, caracterizacao):
+    def __init__(self,nome, senha, caracterizacao,sistema):
+        self.sistema = sistema
         self.nome = nome
         self.senha = senha
         self.caracteristicas= caracterizacao
         self.atividades = []
         self.habitos = []
         self.conquistas = []
-        self.registrar_atividade('criou conta')
+        self.atividades.append(self.registrar_atividade('criou conta'))
+        sistema + Usuario
 
     def prever(self,modelo):
         if modelo == 'knn':
             Knn('knn').prever(self.caracteristicas)
-            self.registrar_atividade('fez previsão com KNeighbors')
+            self.atividades.append(self.registrar_atividade('fez previsão com KNeighbors'))
+            atualizar_sistema(self)
         elif modelo == 'arvore':
             Arvore('arvore').prever(self.caracteristicas)
-            self.registrar_atividade('fez previsão com RandomForest')
+            self.atividades.append(self.registrar_atividade('fez previsão com RandomForest'))
+            atualizar_sistema(self)
 
     def adicionar_conquista(self, nome):
         self.conquistas.append(Conquista(nome))
-        self.registrar_atividade(f'obteve a conquista {nome}')
+        self.atividades.append(self.registrar_atividade(f'obteve a conquista {nome}'))
+        atualizar_sistema(self)
 
 class Sistema:
     def __init__(self):
         self.senha = 'DemetriosMelhorProfessor'
-        user = ''
         with open('usuarios.csv',"r") as lista_usuarios:
             users = list(csv.reader(lista_usuarios, delimiter=","))
         self.usuarios = users
