@@ -237,6 +237,7 @@ class Arvore(ModeloIA):
         return nova_previsao
 
 class DormirCedo:
+    nome = 'dormir cedo'
     def motivar(self):
         return random.choice(["Dormir cedo hoje é investir em uma versão mais forte de você amanhã.","Seu corpo precisa de descanso tanto quanto sua mente precisa de foco.","Quem dorme cedo não perde tempo — ganha energia.","A disciplina de hoje é o sucesso de amanhã começando no seu sono.","Desligar agora é escolher acordar melhor depois.","Não é sobre dormir menos, é sobre viver melhor.","A noite bem dormida é o primeiro passo de um dia produtivo.","Seu futuro agradece cada hora de sono que você respeita hoje."])
     
@@ -248,20 +249,37 @@ class DormirCedo:
         return t2 - t1
 
 class AtividadeFisica:
+    nome = 'atividade fisica'
     def motivar(self):
         return random.choice(["Seu corpo pode até pedir para parar, mas sua mente decide continuar.","Um treino hoje é um passo a menos em direção à sua melhor versão.","Disciplina vence a motivação quando a vontade acaba.","Você não treina só o corpo, treina a mente também.","O esforço de hoje é o resultado de amanhã.","Não espere sentir vontade, crie o hábito.","Cada gota de suor te aproxima do seu objetivo.","O limite começa onde sua determinação acaba.","Treinar é investir em você mesmo.","Você é mais forte do que a desculpa que tentou te parar."])
     def calcular_IMC(self,peso,altura):
         return peso/(altura**2)
 
 class Leitura:
+    nome = 'leitura'
     def motivar(self):
         return random.choice(["Quem lê vive mil vidas em uma só.", "Ler é treinar a mente para enxergar o mundo de outra forma.", "Um livro por dia afasta a ignorância para sempre.", "A leitura abre portas que a realidade ainda não mostrou.", "Quem lê nunca está sozinho.", "Cada página lida é um passo no seu crescimento.", "Livros são academias para a mente.", "Ler hoje é pensar melhor amanhã.", "A leitura transforma curiosidade em conhecimento.", "Quanto mais você lê, mais você entende o mundo."])
     def calcular_media(self,paginas,dias):
         return paginas/dias
+class Meditacao:
+    nome = 'meditacao'
+    def motivar(self):
+        return random.choice(["Respire fundo e permita que sua mente encontre a calma.", "Cada respiração é uma oportunidade de recomeçar.", "O silêncio interior é uma fonte inesgotável de força.", "Você não precisa controlar tudo; apenas esteja presente.", "A paz que você procura já existe dentro de você.", "Deixe os pensamentos passarem como nuvens no céu.", "Seu bem-estar começa com um momento de atenção plena.", "Respire tranquilidade, expire preocupações.", "A serenidade cresce quando você desacelera."])
+    def calcular_tempo_meditacao(self,inicio,fim):
+        t1 = datetime.strptime(inicio,"%H:%M")
+        t2 = datetime.strptime(fim,"%H:%M")
+        if t2 < t1:
+            t2 = t2.replace(day=2)
+        return t2 - t1
+
 
 class AtividadeMixin:
     def registrar_atividade(usuario,atividade):
         return f'{usuario} - {atividade}'
+
+class Conquista:
+    def __init__(self,nome):
+        self.nome = nome
 
 class Usuario (AtividadeMixin):
     def __init__(self,nome, senha, caracterizacao):
@@ -280,8 +298,7 @@ class Usuario (AtividadeMixin):
             Arvore('arvore').prever()
             self.registrar_atividade(self.nome,'fez previsão com RandomForest')
 
-    def acessar_habitos(self):
-        pass
-    def adicionar_conquista(self):
-        pass
+    def adicionar_conquista(self, nome):
+        self.conquistas.append(Conquista(nome))
+        self.registrar_atividade(self.nome,f'obteve a conquista {nome}')
 
