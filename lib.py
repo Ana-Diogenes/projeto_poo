@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 import random
 from datetime import datetime
+import csv
 
 class Caracterizacao:
     def __init__(self,idade,genero,ano_academico,horas_estudo_dia,pressao_provas,performance_academica,nivel_extresse,nivel_ansiedade,nivel_depressao,horas_sono,atividade_fisica,suporte_social,tempo_tela,uso_internet,extresse_financeiro,expectativa_familiar):
@@ -302,3 +303,10 @@ class Usuario (AtividadeMixin):
         self.conquistas.append(Conquista(nome))
         self.registrar_atividade(self.nome,f'obteve a conquista {nome}')
 
+class Sistema:
+    def __init__(self):
+        self.__senha = 'DemetriosMelhorProfessor'
+        usuarios = ''
+        with open('usuarios.csv',"r") as lista_usuarios:
+            usuarios = csv.reader(lista_usuarios, delimiter=",")
+        self.usuarios = usuarios
