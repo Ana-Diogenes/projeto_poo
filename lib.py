@@ -275,8 +275,8 @@ class Meditacao:
 
 
 class AtividadeMixin:
-    def registrar_atividade(usuario,atividade):
-        return f'{usuario} - {atividade}'
+    def registrar_atividade(self,atividade):
+        return f'{self.nome} - {atividade}'
 
 class Conquista:
     def __init__(self,nome):
@@ -287,26 +287,51 @@ class Usuario (AtividadeMixin):
         self.nome = nome
         self.senha = senha
         self.caracteristicas= caracterizacao
+        self.atividades = []
         self.habitos = []
         self.conquistas = []
-        self.registrar_atividade(self.nome,'criou conta')
+        self.registrar_atividade('criou conta')
 
     def prever(self,modelo):
         if modelo == 'knn':
             Knn('knn').prever()
-            self.registrar_atividade(self.nome,'fez previsão com KNeighbors')
+            self.registrar_atividade('fez previsão com KNeighbors')
         elif modelo == 'arvore':
             Arvore('arvore').prever()
-            self.registrar_atividade(self.nome,'fez previsão com RandomForest')
+            self.registrar_atividade('fez previsão com RandomForest')
 
     def adicionar_conquista(self, nome):
         self.conquistas.append(Conquista(nome))
-        self.registrar_atividade(self.nome,f'obteve a conquista {nome}')
+        self.registrar_atividade(f'obteve a conquista {nome}')
 
 class Sistema:
     def __init__(self):
         self.__senha = 'DemetriosMelhorProfessor'
         usuarios = ''
         with open('usuarios.csv',"r") as lista_usuarios:
-            usuarios = csv.reader(lista_usuarios, delimiter=",")
+            usuarios = list(csv.reader(lista_usuarios, delimiter=","))
         self.usuarios = usuarios
+
+    def __iadd__(self, usuario):
+        with open('usuarios.csv',"a") as usuarios: 
+            usuarios.write(f'{usuario.nome},{usuario.senha},{usuario.caracteristicas.__dict__.values()},{usuario.atividades.__dict__.values()},{usuario.habitos__dict__.values()},{usuario.conquistas.__dict__.values()}')
+    def __isub__(self, usuario):
+        lista_nova = []
+        achou = False
+        with open('usuarios.csv',"r") as usuarios:
+            lista_usuarios = csv.reader(usuarios, delimiter=",")
+            for linha in lista_usuarios:
+                if (linha [0]).lower() != (usuario.nome).lower():
+                    lista_nova.append(linha)
+                elif (linha [0]).lower() == (usuario.nome).lower():
+                    achou = True
+        if achou == False: 
+            return False
+        with open ('filmes.csv','w') as filmes: 
+            for i,linha in enumerate(lista_nova):
+                if i==0:
+                    filmes.write(linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
+                else:
+                    filmes.write('\n'+linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
+        return True
+    
