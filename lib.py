@@ -218,13 +218,13 @@ class Knn(ModeloIA):
         y = tabela ['risk_level']
         ia_knn = KNeighborsClassifier()
         ia_knn.fit(x,y)
-        novos_usuarios = pd.read_csv('novos.csv').drop(['burnout_score','mental_health_index','dropout_risk'], axis=1)
-        novos_usuarios['gender'] = tradutor.transform(novos_usuarios['gender'])
-        nova_previsao = ia_knn.predict(novos_usuarios)
+        previsao = pd.DataFrame([{'idade': dados.idade,'genero': dados.genero,'ano_academico': dados.ano_academico,'horas_estudo_dia': dados.horas_estudo_dia,'pressao_provas': dados.pressao_provas,'performance_academica': dados.performance_academica,'nivel_extresse': dados.nivel_extresse,'nivel_ansiedade': dados.nivel_ansiedade,'nivel_depressao': dados.nivel_depressao,'horas_sono': dados.horas_sono,'atividade_fisica': dados.atividade_fisica,'suporte_social': dados.suporte_social,'tempo_tela': dados.tempo_tela,'uso_internet': dados.uso_internet,'extresse_financeiro': dados.extresse_financeiro,'expectativa_familiar': dados.expectativa_familiar}])
+        previsao['gender'] = tradutor.transform(previsao['gender'])
+        nova_previsao = ia_knn.predict(previsao)
         return nova_previsao
 
 class Arvore(ModeloIA):
-    def prever(self):
+    def prever(self,dados):
         tabela = pd.read_csv("student_mental_health_burnout_1M.csv")
         tradutor = LabelEncoder() 
         tabela['gender'] = tradutor.fit_transform(tabela['gender'])
@@ -232,9 +232,9 @@ class Arvore(ModeloIA):
         y = tabela ['risk_level']
         ia_arvore = RandomForestClassifier()
         ia_arvore.fit(x,y)
-        novos_usuarios = pd.read_csv('novos.csv').drop(['burnout_score','mental_health_index','dropout_risk'], axis=1)
-        novos_usuarios['gender'] = tradutor.transform(novos_usuarios['gender'])
-        nova_previsao = ia_arvore.predict(novos_usuarios)
+        previsao = pd.DataFrame([{'idade': dados.idade,'genero': dados.genero,'ano_academico': dados.ano_academico,'horas_estudo_dia': dados.horas_estudo_dia,'pressao_provas': dados.pressao_provas,'performance_academica': dados.performance_academica,'nivel_extresse': dados.nivel_extresse,'nivel_ansiedade': dados.nivel_ansiedade,'nivel_depressao': dados.nivel_depressao,'horas_sono': dados.horas_sono,'atividade_fisica': dados.atividade_fisica,'suporte_social': dados.suporte_social,'tempo_tela': dados.tempo_tela,'uso_internet': dados.uso_internet,'extresse_financeiro': dados.extresse_financeiro,'expectativa_familiar': dados.expectativa_familiar}])
+        previsao['gender'] = tradutor.transform(previsao['gender'])
+        nova_previsao = ia_arvore.predict(previsao)
         return nova_previsao
 
 class DormirCedo:
@@ -274,7 +274,6 @@ class Meditacao:
             t2 = t2.replace(day=2)
         return t2 - t1
 
-
 class AtividadeMixin:
     def registrar_atividade(self,atividade):
         return f'{self.nome} - {atividade}'
@@ -295,10 +294,10 @@ class Usuario (AtividadeMixin):
 
     def prever(self,modelo):
         if modelo == 'knn':
-            Knn('knn').prever()
+            Knn('knn').prever(self.caracteristicas)
             self.registrar_atividade('fez previsão com KNeighbors')
         elif modelo == 'arvore':
-            Arvore('arvore').prever()
+            Arvore('arvore').prever(self.caracteristicas)
             self.registrar_atividade('fez previsão com RandomForest')
 
     def adicionar_conquista(self, nome):
