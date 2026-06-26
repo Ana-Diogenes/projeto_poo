@@ -2,23 +2,10 @@ import abc
 import pandas as pd 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
 import random
 from datetime import datetime
 import csv
 
-def atualizar_sistema(usuario):
-    lista_nova = []
-    with open('usuarios.csv',"r") as arquivo:
-        leitor = csv.reader(arquivo)
-        for linha in leitor:
-            if linha[0].lower() != usuario.nome.lower():
-                lista_nova.append(linha)
-            else:
-                lista_nova.append([usuario.nome,usuario.senha,str(usuario.caracteristicas),str(usuario.atividades),str(usuario.habitos),str(usuario.conquistas)])
-    with open('usuarios.csv','w', newline='') as arquivo:
-        escritor = csv.writer(arquivo)
-        escritor.writerows(lista_nova)
 
 class DadosFactuais:
     def __init__(self,idade,genero,ano_academico):
@@ -300,20 +287,25 @@ class Usuario (AtividadeMixin):
     def senha(self):
         return self.__senha
     
+    @senha.setter
+    def senha(self,nova_senha):
+        if len(nova_senha) >=8:
+            self.__senha = nova_senha
+
     def prever(self):
         self.atividades.append(self.registrar_atividade('fez previsão com RandomForest'))
-        atualizar_sistema(self)
+        self.sistema.atualizar_sistema(self)
         return ModeloIA().prever(self.caracteristicas)
 
     def adicionar_conquista(self, nome):
         self.conquistas.append(Conquista(nome))
         self.atividades.append(self.registrar_atividade(f'obteve a conquista {nome}'))
-        atualizar_sistema(self)
+        self.sistema.atualizar_sistema(self)
     
     def adicionar_habito(self,habito):
         self.habitos.append(habito)
         self.atividades.append(self.registrar_atividade(f'adiquiriu o habito {habito.nome}'))
-        atualizar_sistema(self)
+        self.sistema.atualizar_sistema(self)
 
 class Sistema:
     def __init__(self,senha):
@@ -326,9 +318,23 @@ class Sistema:
         return self.__senha
     
     @senha.setter
-    def senha(self, valor):
-        self.__senha = valor
-
+    def senha(self,nova_senha):
+        if len(nova_senha) >=8:
+            self.__senha = nova_senha
+        
+    def atualizar_sistema(self,usuario):
+        lista_nova = []
+        with open('usuarios.csv',"r") as arquivo:
+            leitor = csv.reader(arquivo)
+            for linha in leitor:
+                if linha[0].lower() != usuario.nome.lower():
+                    lista_nova.append(linha)
+                else:
+                    lista_nova.append([usuario.nome,usuario.senha,str(usuario.caracteristicas),str(usuario.atividades),str(usuario.habitos),str(usuario.conquistas)])
+        with open('usuarios.csv','w', newline='') as arquivo:
+            escritor = csv.writer(arquivo)
+            escritor.writerows(lista_nova)
+            
     def __add__(self, usuario):
         with open('usuarios.csv',"a", newline='') as usuarios:
             escritor = csv.writer(usuarios)
@@ -378,7 +384,16 @@ class Dev(Usuario,AcessarSistema):
     
     def mudar_senha(self,sistema,nova_senha):
         sistema.senha = nova_senha
-
+    
+    @property
+    def senha_dev(self):
+        return Dev.__senha_dev
+    
+    @senha_dev.setter
+    def senha_dev(self,nova_senha):
+        if len(nova_senha) >=8:
+            Dev.senha_dev = nova_senha
+            
 class Mod(Usuario,AcessarSistema):
     __senha_mod = 'ModDoSistema'
     def listar_usuarios(self,sistema):
@@ -386,14 +401,24 @@ class Mod(Usuario,AcessarSistema):
         for user in sistema.usuarios:
             nomes_usuarios.append(user[0])
         return nomes_usuarios
+    
+    @property
+    def senha_mod(self):
+        return Mod.__senha_mod
+    
+    @senha_mod.setter
+    def senha(self,nova_senha):
+        if len(nova_senha) >=8:
+            Mod.__senha_mod = nova_senha
 
 # ==========================
 # Sistema
 # ==========================
+
 sistema = Sistema("DemetriosMelhorProfessor")
 
 # ==========================
-# Dados factuais
+# Dados Factuais
 # ==========================
 
 dados_clara = DadosFactuais(18, "Female", 2)
@@ -459,12 +484,12 @@ carac_mia = Caracterizacao(
 # Usuários
 # ==========================
 
-clara = Usuario("Clara", "123", carac_clara, sistema)
-joao = Usuario("Joao", "456", carac_joao, sistema)
-mia = Usuario("Mia", "789", carac_mia, sistema)
+clara = Usuario("Clara", "12345678", carac_clara, sistema)
+joao = Usuario("Joao", "12345678", carac_joao, sistema)
+mia = Usuario("Mia", "12345678", carac_mia, sistema)
 
 # ==========================
-# Dev e Moderador
+# Desenvolvedor e Moderador
 # ==========================
 
 dev = Dev(
@@ -499,10 +524,10 @@ print(meditacao.motivar())
 
 print("\n========== TESTE DOS CÁLCULOS ==========")
 
-print(dormir.calular_sono("23:30", "07:15"))
-print(atividade.calcular_IMC(65, 1.70))
-print(leitura.calcular_media(320, 8))
-print(meditacao.calcular_tempo_meditacao("18:30", "19:00"))
+print("Sono:", dormir.calular_sono("23:30", "07:15"))
+print("IMC:", atividade.calcular_IMC(65, 1.70))
+print("Média leitura:", leitura.calcular_media(320, 8))
+print("Tempo meditação:", meditacao.calcular_tempo_meditacao("18:30", "19:00"))
 
 print("\n========== TESTE DO MIXIN ==========")
 
@@ -513,12 +538,13 @@ print("\n========== TESTE DAS CONQUISTAS ==========")
 clara.adicionar_conquista("Primeiro Login")
 clara.adicionar_conquista("Primeira Previsão")
 
-for conquista in clara.conquistas:
-    print(conquista.nome)
+print("Conquistas:")
+for c in clara.conquistas:
+    print(c.nome)
 
 print("\nAtividades:")
-for atividade_usuario in clara.atividades:
-    print(atividade_usuario)
+for a in clara.atividades:
+    print(a)
 
 print("\n========== TESTE DOS HÁBITOS DO USUÁRIO ==========")
 
@@ -527,17 +553,17 @@ clara.adicionar_habito(atividade)
 clara.adicionar_habito(leitura)
 clara.adicionar_habito(meditacao)
 
-print("Hábitos:")
+print("Hábitos cadastrados:")
 
 for h in clara.habitos:
     print(h.nome)
 
 print("\n========== TESTE DA IA ==========")
 
-print("Previsão da Clara:")
+print("Clara:")
 print(clara.prever())
 
-print("Previsão do João:")
+print("João:")
 print(joao.prever())
 
 print("\n========== TESTE DO MOD ==========")
@@ -551,6 +577,7 @@ print(dev.listar_usuarios(sistema))
 print("\nRemovendo João...")
 dev.excluir_usuario(sistema, joao)
 
+print("Usuários após remoção:")
 print(mod.listar_usuarios(sistema))
 
 print("\n========== TESTE FINAL ==========")
@@ -560,13 +587,9 @@ clara.adicionar_conquista("Usuário Iniciante")
 print(clara.prever())
 
 print(dormir.motivar())
-
 print(dormir.calular_sono("22:45", "06:30"))
-
 print(atividade.calcular_IMC(72, 1.78))
-
 print(leitura.calcular_media(450, 15))
-
 print(meditacao.calcular_tempo_meditacao("19:00", "19:40"))
 
 print("\nUsuários do moderador:")
