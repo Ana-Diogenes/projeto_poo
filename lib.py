@@ -218,9 +218,7 @@ class Knn(ModeloIA):
         y = tabela ['risk_level']
         ia_knn = KNeighborsClassifier()
         ia_knn.fit(x,y)
-        previsao = pd.DataFrame([{'age': dados.idade,'gender': dados.genero,'academic_year': dados.ano_academico,'study_hours_per_day': dados.horas_estudo_dia,'exam_pressure': dados.pressao_provas,
-    'academic_performance': dados.performance_academica,'stress_level': dados.nivel_estresse,'anxiety_score': dados.nivel_ansiedade,'depression_score': dados.nivel_depressao,'sleep_hours': dados.horas_sono,'physical_activity': dados.atividade_fisica,'social_support': dados.suporte_social,'screen_time': dados.tempo_tela,'internet_usage': dados.uso_internet,'financial_stress': dados.estresse_financeiro,'family_expectation': dados.expectativa_familiar,'burnout_score': dados.burnout_score,'mental_health_index': dados.mental_health_index,'risk_level': dados.risk_level,'dropout_risk': dados.dropout_risk
-}])
+        previsao = pd.DataFrame([{'age': dados.idade,'gender': dados.genero,'academic_year': dados.ano_academico,'study_hours_per_day': dados.horas_estudo_dia,'exam_pressure': dados.pressao_provas,'academic_performance': dados.performance_academica,'stress_level': dados.nivel_estresse,'anxiety_score': dados.nivel_ansiedade,'depression_score': dados.nivel_depressao,'sleep_hours': dados.horas_sono,'physical_activity': dados.atividade_fisica,'social_support': dados.suporte_social,'screen_time': dados.tempo_tela,'internet_usage': dados.uso_internet,'financial_stress': dados.estresse_financeiro,'family_expectation': dados.expectativa_familiar}])
         previsao['gender'] = tradutor.transform(previsao['gender'])
         nova_previsao = ia_knn.predict(previsao)
         return nova_previsao
@@ -234,7 +232,7 @@ class Arvore(ModeloIA):
         y = tabela ['risk_level']
         ia_arvore = RandomForestClassifier()
         ia_arvore.fit(x,y)
-        previsao = pd.DataFrame([{'idade': dados.idade,'genero': dados.genero,'ano_academico': dados.ano_academico,'horas_estudo_dia': dados.horas_estudo_dia,'pressao_provas': dados.pressao_provas,'performance_academica': dados.performance_academica,'nivel_estresse': dados.nivel_estresse,'nivel_ansiedade': dados.nivel_ansiedade,'nivel_depressao': dados.nivel_depressao,'horas_sono': dados.horas_sono,'atividade_fisica': dados.atividade_fisica,'suporte_social': dados.suporte_social,'tempo_tela': dados.tempo_tela,'uso_internet': dados.uso_internet,'estresse_financeiro': dados.estresse_financeiro,'expectativa_familiar': dados.expectativa_familiar}])
+        previsao = pd.DataFrame([{'age': dados.idade,'gender': dados.genero,'academic_year': dados.ano_academico,'study_hours_per_day': dados.horas_estudo_dia,'exam_pressure': dados.pressao_provas,'academic_performance': dados.performance_academica,'stress_level': dados.nivel_estresse,'anxiety_score': dados.nivel_ansiedade,'depression_score': dados.nivel_depressao,'sleep_hours': dados.horas_sono,'physical_activity': dados.atividade_fisica,'social_support': dados.suporte_social,'screen_time': dados.tempo_tela,'internet_usage': dados.uso_internet,'financial_stress': dados.estresse_financeiro,'family_expectation': dados.expectativa_familiar}])
         previsao['gender'] = tradutor.transform(previsao['gender'])
         nova_previsao = ia_arvore.predict(previsao)
         return nova_previsao
@@ -297,9 +295,9 @@ def atualizar_sistema(usuario):
     with open ('usuarios.csv','w') as users: 
         for i,linha in enumerate(lista_nova):
             if i==0:
-                users.write(linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
+                users.write(f"{linha[0]},{linha[1]},{linha[2]},{linha[3]},{linha[4]},{linha[5]}")
             else:
-                users.write('\n'+linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
+                users.write(f"\n{linha[0]},{linha[1]},{linha[2]},{linha[3]},{linha[4]},{linha[5]}")
 
 class Usuario (AtividadeMixin):
     def __init__(self,nome, senha, caracterizacao,sistema):
@@ -327,12 +325,17 @@ class Usuario (AtividadeMixin):
         self.conquistas.append(Conquista(nome))
         self.atividades.append(self.registrar_atividade(f'obteve a conquista {nome}'))
         atualizar_sistema(self)
+    
+    def adicionar_habito(self,habito):
+        self.habitos.append(habito)
+        self.atividades.append(self.registrar_atividade(f'adiquiriu o habito {habito.nome}'))
+        atualizar_sistema(self)
 
 class Sistema:
     def __init__(self):
         self.senha = 'DemetriosMelhorProfessor'
         with open('usuarios.csv',"r") as lista_usuarios:
-            users = list(csv.reader(lista_usuarios, delimiter=","))
+            users = list(csv.reader(lista_usuarios, delimiter="."))
         self.usuarios = users
 
     def __add__(self, usuario):
@@ -361,13 +364,13 @@ class Sistema:
 
 class AcessarSistema(abc.ABC):
     @abc.abstractmethod
-    def listar_usuarios(sistema):
+    def listar_usuarios(self,sistema):
         pass
 
 class Dev(Usuario,AcessarSistema):
     senha_dev = 'DevDoSistema'
     
-    def listar_usuarios(sistema):
+    def listar_usuarios(self,sistema):
         return sistema.usuarios
     
     def excluir_usuario(self, sistema,usuario):
@@ -383,9 +386,270 @@ class Dev(Usuario,AcessarSistema):
 
 class Mod(Usuario,AcessarSistema):
     senha_mod = 'ModDoSistema'
-    def listar_usuarios(sistema):
+    def listar_usuarios(self,sistema):
         nomes_usuarios = []
         for user in sistema.usuarios:
             nomes_usuarios.append(user[0])
         return nomes_usuarios
     
+
+# ==========================
+# Sistema
+# ==========================
+sistema = Sistema()
+
+# ==========================
+# Caracterizações
+# ==========================
+carac_ana = Caracterizacao(
+    18,
+    "Female",
+    2,
+    4.5,
+    6.0,
+    8.5,
+    5.0,
+    4.0,
+    2.0,
+    7.5,
+    4.0,
+    8.0,
+    5.0,
+    6.0,
+    3.0,
+    7.0
+)
+
+carac_carlos = Caracterizacao(
+    20,
+    "Male",
+    4,
+    8.0,
+    9.0,
+    7.5,
+    9.0,
+    8.0,
+    6.5,
+    5.5,
+    2.0,
+    5.0,
+    9.0,
+    8.0,
+    8.5,
+    9.0
+)
+
+carac_maria = Caracterizacao(
+    19,
+    "Female",
+    3,
+    3.5,
+    4.0,
+    9.0,
+    3.0,
+    2.0,
+    1.0,
+    8.5,
+    6.0,
+    9.0,
+    4.0,
+    5.0,
+    2.0,
+    5.0
+)
+
+# ==========================
+# Usuários
+# ==========================
+ana = Usuario(
+    "Ana",
+    "123",
+    carac_ana,
+    sistema
+)
+
+carlos = Usuario(
+    "Carlos",
+    "456",
+    carac_carlos,
+    sistema
+)
+
+maria = Usuario(
+    "Maria",
+    "789",
+    carac_maria,
+    sistema
+)
+
+# ==========================
+# Dev e Moderador
+# (caso seu __init__ já tenha sido corrigido)
+# ==========================
+dev = Dev(
+    "Administrador",
+    Dev.senha_dev,
+    carac_ana,
+    sistema
+)
+
+mod = Mod(
+    "Moderador",
+    Mod.senha_mod,
+    carac_maria,
+    sistema
+)
+
+# ==========================
+# Hábitos
+# ==========================
+dormir = DormirCedo()
+atividade = AtividadeFisica()
+leitura = Leitura()
+meditacao = Meditacao()
+
+print("\n========== TESTE DOS HÁBITOS ==========")
+
+print("\nMotivação para dormir cedo:")
+print(dormir.motivar())
+
+print("\nMotivação para atividade física:")
+print(atividade.motivar())
+
+print("\nMotivação para leitura:")
+print(leitura.motivar())
+
+print("\nMotivação para meditação:")
+print(meditacao.motivar())
+
+
+print("\n========== TESTE DOS CÁLCULOS ==========")
+
+print("\nTempo de sono (23:30 às 07:15):")
+print(dormir.calular_sono("23:30", "07:15"))
+
+print("\nIMC (65kg, 1.70m):")
+print(atividade.calcular_IMC(65, 1.70))
+
+print("\nMédia de leitura (320 páginas em 8 dias):")
+print(leitura.calcular_media(320, 8))
+
+print("\nTempo de meditação (18:30 às 19:00):")
+print(meditacao.calcular_tempo_meditacao("18:30", "19:00"))
+
+
+print("\n========== TESTE DO MIXIN ==========")
+
+print("\nRegistro de atividade:")
+print(ana.registrar_atividade("Entrou no sistema"))
+
+
+print("\n========== TESTE DAS CONQUISTAS ==========")
+
+ana.adicionar_conquista("Primeiro Login")
+ana.adicionar_conquista("Primeira Previsão")
+
+print("\nConquistas da Ana:")
+print(ana.conquistas)
+
+print("\nHistórico de atividades da Ana:")
+print(ana.atividades)
+
+# ==========================
+# Hábitos (teste no usuário)
+# ==========================
+
+print("\n========== TESTE DOS HÁBITOS NOS USUÁRIOS ==========")
+
+ana.adicionar_habito(dormir)
+ana.adicionar_habito(atividade)
+ana.adicionar_habito(leitura)
+ana.adicionar_habito(meditacao)
+
+print("\nHábitos da Ana:")
+for h in ana.habitos:
+    print(h.nome)
+
+print("\nAtividades da Ana após hábitos:")
+print(ana.atividades)
+
+print("\n========== TESTE DA IA ==========")
+
+print("\nPrevisão usando KNN:")
+print(ana.prever("knn"))
+
+print("\nPrevisão usando Random Forest:")
+print(carlos.prever("arvore"))
+
+
+print("\n========== TESTE DO SISTEMA ==========")
+
+print("\nLista de usuários armazenados:")
+print(sistema.usuarios)
+
+
+print("\n========== TESTE DO MODERADOR ==========")
+
+print("\nUsuários visíveis para o moderador:")
+print(mod.listar_usuarios(sistema))
+
+
+print("\n========== TESTE DO DESENVOLVEDOR ==========")
+
+print("\nLista completa de usuários:")
+print(dev.listar_usuarios(sistema))
+
+
+
+print("Usuário adicionado.")
+
+
+print("\nExcluindo Carlos pelo desenvolvedor...")
+dev.excluir_usuario(sistema, carlos)
+
+print("Usuário removido.")
+
+
+print("\nAlterando senha mestre do sistema...")
+dev.mudar_senha("NovaSenhaDoSistema")
+
+print("Nova senha do sistema:")
+print(Sistema.senha)
+
+
+print("\n========== NOVOS TESTES ==========")
+
+print("\nNova previsão da Ana:")
+print(ana.prever("knn"))
+
+ana.adicionar_conquista("Usuário Iniciante")
+
+print("\nNova motivação para dormir cedo:")
+print(dormir.motivar())
+
+print("\nNovo cálculo de sono (22:45 às 06:30):")
+print(dormir.calular_sono("22:45", "06:30"))
+
+print("\nNovo cálculo de IMC (72kg, 1.78m):")
+print(atividade.calcular_IMC(72, 1.78))
+
+print("\nNova média de leitura (450 páginas em 15 dias):")
+print(leitura.calcular_media(450, 15))
+
+print("\nNovo tempo de meditação (19:00 às 19:40):")
+print(meditacao.calcular_tempo_meditacao("19:00", "19:40"))
+
+
+print("\n========== VERIFICAÇÃO FINAL ==========")
+
+print("\nUsuários visíveis para o moderador:")
+print(mod.listar_usuarios(sistema))
+
+print("\nUsuários visíveis para o desenvolvedor:")
+print(dev.listar_usuarios(sistema))
+
+print("\nTentando excluir Carlos novamente...")
+dev.excluir_usuario(sistema, carlos)
+
+print("\nLista final de usuários:")
+print(mod.listar_usuarios(sistema))
