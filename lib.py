@@ -19,25 +19,12 @@ def atualizar_sistema(usuario):
     with open('usuarios.csv','w', newline='') as arquivo:
         escritor = csv.writer(arquivo)
         escritor.writerows(lista_nova)
-        
-class Caracterizacao:
-    def __init__(self,idade,genero,ano_academico,horas_estudo_dia,pressao_provas,performance_academica,nivel_estresse,nivel_ansiedade,nivel_depressao,horas_sono,atividade_fisica,suporte_social,tempo_tela,uso_internet,estresse_financeiro,expectativa_familiar):
+
+class DadosFactuais:
+    def __init__(self,idade,genero,ano_academico):
             self.__idade = idade
             self.__genero = genero
-            self.__ano_academico = ano_academico
-            self.__horas_estudo_dia = horas_estudo_dia
-            self.__pressao_provas = pressao_provas
-            self.__performance_academica = performance_academica
-            self.__nivel_estresse = nivel_estresse
-            self.__nivel_ansiedade = nivel_ansiedade
-            self.__nivel_depressao = nivel_depressao
-            self.__horas_sono = horas_sono
-            self.__atividade_fisica = atividade_fisica
-            self.__suporte_social = suporte_social
-            self.__tempo_tela = tempo_tela
-            self.__uso_internet = uso_internet
-            self.__estresse_financeiro = estresse_financeiro
-            self.__expectativa_familiar = expectativa_familiar
+            self.__ano_academico = ano_academico 
     @property
     def idade(self):
         return self.__idade
@@ -71,6 +58,23 @@ class Caracterizacao:
             return True
         return False
 
+class Caracterizacao:
+    def __init__(self,dados_factuais,horas_estudo_dia,pressao_provas,performance_academica,nivel_estresse,nivel_ansiedade,nivel_depressao,horas_sono,atividade_fisica,suporte_social,tempo_tela,uso_internet,estresse_financeiro,expectativa_familiar):
+            self.dados_factuais = dados_factuais
+            self.__horas_estudo_dia = horas_estudo_dia
+            self.__pressao_provas = pressao_provas
+            self.__performance_academica = performance_academica
+            self.__nivel_estresse = nivel_estresse
+            self.__nivel_ansiedade = nivel_ansiedade
+            self.__nivel_depressao = nivel_depressao
+            self.__horas_sono = horas_sono
+            self.__atividade_fisica = atividade_fisica
+            self.__suporte_social = suporte_social
+            self.__tempo_tela = tempo_tela
+            self.__uso_internet = uso_internet
+            self.__estresse_financeiro = estresse_financeiro
+            self.__expectativa_familiar = expectativa_familiar
+    
     @property
     def horas_estudo_dia(self):
         return self.__horas_estudo_dia
@@ -223,7 +227,7 @@ class ModeloIA():
         y = tabela ['risk_level']
         ia_arvore = RandomForestClassifier()
         ia_arvore.fit(x,y)
-        previsao = pd.DataFrame([{'age': dados.idade,'gender': dados.genero,'academic_year': dados.ano_academico,'study_hours_per_day': dados.horas_estudo_dia,'exam_pressure': dados.pressao_provas,'academic_performance': dados.performance_academica,'stress_level': dados.nivel_estresse,'anxiety_score': dados.nivel_ansiedade,'depression_score': dados.nivel_depressao,'sleep_hours': dados.horas_sono,'physical_activity': dados.atividade_fisica,'social_support': dados.suporte_social,'screen_time': dados.tempo_tela,'internet_usage': dados.uso_internet,'financial_stress': dados.estresse_financeiro,'family_expectation': dados.expectativa_familiar}])
+        previsao = pd.DataFrame([{'age': dados.dados_factuais.idade,'gender': dados.dados_factuais.genero,'academic_year': dados.dados_factuais.ano_academico,'study_hours_per_day': dados.horas_estudo_dia,'exam_pressure': dados.pressao_provas,'academic_performance': dados.performance_academica,'stress_level': dados.nivel_estresse,'anxiety_score': dados.nivel_ansiedade,'depression_score': dados.nivel_depressao,'sleep_hours': dados.horas_sono,'physical_activity': dados.atividade_fisica,'social_support': dados.suporte_social,'screen_time': dados.tempo_tela,'internet_usage': dados.uso_internet,'financial_stress': dados.estresse_financeiro,'family_expectation': dados.expectativa_familiar}])
         previsao['gender'] = tradutor.transform(previsao['gender'])
         nova_previsao = ia_arvore.predict(previsao)
         return nova_previsao
@@ -290,7 +294,7 @@ class Usuario (AtividadeMixin):
         self.habitos = []
         self.conquistas = []
         self.atividades.append(self.registrar_atividade('criou conta'))
-        sistema+= self
+        sistema= sistema+self
         
     @property
     def senha(self):
@@ -317,6 +321,13 @@ class Sistema:
         with open('usuarios.csv',"r") as lista_usuarios:
             users = list(csv.reader(lista_usuarios, delimiter=","))
         self.usuarios = users
+    @property
+    def senha(self):
+        return self.__senha
+    
+    @senha.setter
+    def senha(self, valor):
+        self.__senha = valor
 
     def __add__(self, usuario):
         with open('usuarios.csv',"a", newline='') as usuarios:
@@ -343,6 +354,7 @@ class Sistema:
                     users.write(linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
                 else:
                     users.write('\n'+linha[0] +','+ linha[1] +',' + linha[2] +',' + linha[3] +','+ linha[4]+','+linha[5])
+        self.usuarios = lista_nova
         return self
 
 class AcessarSistema(abc.ABC):
@@ -364,8 +376,8 @@ class Dev(Usuario,AcessarSistema):
         sistema = sistema + usuario
         return sistema
     
-    def mudar_senha(self,nova_senha):
-        Sistema.senha = nova_senha
+    def mudar_senha(self,sistema,nova_senha):
+        sistema.senha = nova_senha
 
 class Mod(Usuario,AcessarSistema):
     __senha_mod = 'ModDoSistema'
@@ -374,3 +386,191 @@ class Mod(Usuario,AcessarSistema):
         for user in sistema.usuarios:
             nomes_usuarios.append(user[0])
         return nomes_usuarios
+
+# ==========================
+# Sistema
+# ==========================
+sistema = Sistema("DemetriosMelhorProfessor")
+
+# ==========================
+# Dados factuais
+# ==========================
+
+dados_clara = DadosFactuais(18, "Female", 2)
+dados_joao = DadosFactuais(20, "Male", 4)
+dados_mia = DadosFactuais(19, "Female", 3)
+
+# ==========================
+# Caracterizações
+# ==========================
+
+carac_clara = Caracterizacao(
+    dados_clara,
+    4.5,
+    6.0,
+    8.5,
+    5.0,
+    4.0,
+    2.0,
+    7.5,
+    4.0,
+    8.0,
+    5.0,
+    6.0,
+    3.0,
+    7.0
+)
+
+carac_joao = Caracterizacao(
+    dados_joao,
+    8.0,
+    9.0,
+    7.5,
+    9.0,
+    8.0,
+    6.5,
+    5.5,
+    2.0,
+    5.0,
+    9.0,
+    8.0,
+    8.5,
+    9.0
+)
+
+carac_mia = Caracterizacao(
+    dados_mia,
+    3.5,
+    4.0,
+    9.0,
+    3.0,
+    2.0,
+    1.0,
+    8.5,
+    6.0,
+    9.0,
+    4.0,
+    5.0,
+    2.0,
+    5.0
+)
+
+# ==========================
+# Usuários
+# ==========================
+
+clara = Usuario("Clara", "123", carac_clara, sistema)
+joao = Usuario("Joao", "456", carac_joao, sistema)
+mia = Usuario("Mia", "789", carac_mia, sistema)
+
+# ==========================
+# Dev e Moderador
+# ==========================
+
+dev = Dev(
+    "Roberto",
+    "DevDoSistema",
+    carac_clara,
+    sistema
+)
+
+mod = Mod(
+    "Carlos",
+    "ModDoSistema",
+    carac_mia,
+    sistema
+)
+
+# ==========================
+# Hábitos
+# ==========================
+
+dormir = DormirCedo()
+atividade = AtividadeFisica()
+leitura = Leitura()
+meditacao = Meditacao()
+
+print("\n========== TESTE DOS HÁBITOS ==========")
+
+print(dormir.motivar())
+print(atividade.motivar())
+print(leitura.motivar())
+print(meditacao.motivar())
+
+print("\n========== TESTE DOS CÁLCULOS ==========")
+
+print(dormir.calular_sono("23:30", "07:15"))
+print(atividade.calcular_IMC(65, 1.70))
+print(leitura.calcular_media(320, 8))
+print(meditacao.calcular_tempo_meditacao("18:30", "19:00"))
+
+print("\n========== TESTE DO MIXIN ==========")
+
+print(clara.registrar_atividade("entrou no sistema"))
+
+print("\n========== TESTE DAS CONQUISTAS ==========")
+
+clara.adicionar_conquista("Primeiro Login")
+clara.adicionar_conquista("Primeira Previsão")
+
+for conquista in clara.conquistas:
+    print(conquista.nome)
+
+print("\nAtividades:")
+for atividade_usuario in clara.atividades:
+    print(atividade_usuario)
+
+print("\n========== TESTE DOS HÁBITOS DO USUÁRIO ==========")
+
+clara.adicionar_habito(dormir)
+clara.adicionar_habito(atividade)
+clara.adicionar_habito(leitura)
+clara.adicionar_habito(meditacao)
+
+print("Hábitos:")
+
+for h in clara.habitos:
+    print(h.nome)
+
+print("\n========== TESTE DA IA ==========")
+
+print("Previsão da Clara:")
+print(clara.prever())
+
+print("Previsão do João:")
+print(joao.prever())
+
+print("\n========== TESTE DO MOD ==========")
+
+print(mod.listar_usuarios(sistema))
+
+print("\n========== TESTE DO DEV ==========")
+
+print(dev.listar_usuarios(sistema))
+
+print("\nRemovendo João...")
+dev.excluir_usuario(sistema, joao)
+
+print(mod.listar_usuarios(sistema))
+
+print("\n========== TESTE FINAL ==========")
+
+clara.adicionar_conquista("Usuário Iniciante")
+
+print(clara.prever())
+
+print(dormir.motivar())
+
+print(dormir.calular_sono("22:45", "06:30"))
+
+print(atividade.calcular_IMC(72, 1.78))
+
+print(leitura.calcular_media(450, 15))
+
+print(meditacao.calcular_tempo_meditacao("19:00", "19:40"))
+
+print("\nUsuários do moderador:")
+print(mod.listar_usuarios(sistema))
+
+print("\nUsuários do desenvolvedor:")
+print(dev.listar_usuarios(sistema))
