@@ -1,8 +1,1 @@
-Ana,123,<__main__.Caracterizacao object at 0x00000215F9410A10>,['Ana - criou conta', 'Ana - obteve a conquista Primeiro Login', 'Ana - obteve a conquista Primeira Previsï¿½o'
-Maria,789,<__main__.Caracterizacao object at 0x00000215F7EB5D10>,['Maria - criou conta'],[],[]
-Administrador,DevDoSistema,<__main__.Caracterizacao object at 0x00000215F9410A10>,['Administrador - criou conta'],[],[]
-Moderador,ModDoSistema,<__main__.Caracterizacao object at 0x00000215F7EB5D10>,['Moderador - criou conta'],[],[]
-clara,123,<__main__.Caracterizacao object at 0x000001F401440910>,"['clara - criou conta', 'clara - obteve a conquista Primeiro Login', 'clara - obteve a conquista Primeira Previsão', 'clara - adiquiriu o habito dormir cedo', 'clara - adiquiriu o habito atividade fisica', 'clara - adiquiriu o habito leitura', 'clara - adiquiriu o habito meditacao', 'clara - fez previsão com KNeighbors', 'clara - fez previsão com KNeighbors', 'clara - obteve a conquista Usuário Iniciante']","[<__main__.DormirCedo object at 0x000001F401441250>, <__main__.AtividadeFisica object at 0x000001F4014413D0>, <__main__.Leitura object at 0x000001F401441390>, <__main__.Meditacao object at 0x000001F4014410D0>]","[<__main__.Conquista object at 0x000001F4010DA410>, <__main__.Conquista object at 0x000001F3FF63C990>, <__main__.Conquista object at 0x000001F3FF661FD0>]"
-mia,789,<__main__.Caracterizacao object at 0x000001F401440990>,['mia - criou conta'],[],[]
-Roberto,DevDoSistema,<__main__.Caracterizacao object at 0x000001F401440910>,['Roberto - criou conta'],[],[]
-Carlos,ModDoSistema,<__main__.Caracterizacao object at 0x000001F401440990>,['Carlos - criou conta'],[],[]
+nome,senha,caracterizacao,atividades,habitos,conquistas

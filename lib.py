@@ -7,6 +7,19 @@ import random
 from datetime import datetime
 import csv
 
+def atualizar_sistema(usuario):
+    lista_nova = []
+    with open('usuarios.csv',"r") as arquivo:
+        leitor = csv.reader(arquivo)
+        for linha in leitor:
+            if linha[0].lower() != usuario.nome.lower():
+                lista_nova.append(linha)
+            else:
+                lista_nova.append([usuario.nome,usuario.senha,str(usuario.caracteristicas),str(usuario.atividades),str(usuario.habitos),str(usuario.conquistas)])
+    with open('usuarios.csv','w', newline='') as arquivo:
+        escritor = csv.writer(arquivo)
+        escritor.writerows(lista_nova)
+        
 class Caracterizacao:
     def __init__(self,idade,genero,ano_academico,horas_estudo_dia,pressao_provas,performance_academica,nivel_estresse,nivel_ansiedade,nivel_depressao,horas_sono,atividade_fisica,suporte_social,tempo_tela,uso_internet,estresse_financeiro,expectativa_familiar):
             self.__idade = idade
@@ -201,29 +214,7 @@ class Caracterizacao:
             return True
         return False
 
-    
-class ModeloIA(abc.ABC):
-    def __init__(self,nome):
-        self.nome = nome
-    @abc.abstractmethod
-    def prever(self,dados):
-        pass
-
-class Knn(ModeloIA):
-    def prever(self,dados):
-        tabela = pd.read_csv("student_mental_health_burnout_1M.csv")
-        tradutor = LabelEncoder() 
-        tabela['gender'] = tradutor.fit_transform(tabela['gender'])
-        x = tabela.drop(['burnout_score','mental_health_index','risk_level','dropout_risk'], axis=1)
-        y = tabela ['risk_level']
-        ia_knn = KNeighborsClassifier()
-        ia_knn.fit(x,y)
-        previsao = pd.DataFrame([{'age': dados.idade,'gender': dados.genero,'academic_year': dados.ano_academico,'study_hours_per_day': dados.horas_estudo_dia,'exam_pressure': dados.pressao_provas,'academic_performance': dados.performance_academica,'stress_level': dados.nivel_estresse,'anxiety_score': dados.nivel_ansiedade,'depression_score': dados.nivel_depressao,'sleep_hours': dados.horas_sono,'physical_activity': dados.atividade_fisica,'social_support': dados.suporte_social,'screen_time': dados.tempo_tela,'internet_usage': dados.uso_internet,'financial_stress': dados.estresse_financeiro,'family_expectation': dados.expectativa_familiar}])
-        previsao['gender'] = tradutor.transform(previsao['gender'])
-        nova_previsao = ia_knn.predict(previsao)
-        return nova_previsao
-
-class Arvore(ModeloIA):
+class ModeloIA():
     def prever(self,dados):
         tabela = pd.read_csv("student_mental_health_burnout_1M.csv")
         tradutor = LabelEncoder() 
@@ -237,7 +228,14 @@ class Arvore(ModeloIA):
         nova_previsao = ia_arvore.predict(previsao)
         return nova_previsao
 
-class DormirCedo:
+class Habito (abc.ABC):
+    nome = 'Habito'
+    
+    @abc.abstractmethod
+    def motivar (self):
+        pass
+    
+class DormirCedo(Habito):
     nome = 'dormir cedo'
     def motivar(self):
         return random.choice(["Dormir cedo hoje é investir em uma versão mais forte de você amanhã.","Seu corpo precisa de descanso tanto quanto sua mente precisa de foco.","Quem dorme cedo não perde tempo — ganha energia.","A disciplina de hoje é o sucesso de amanhã começando no seu sono.","Desligar agora é escolher acordar melhor depois.","Não é sobre dormir menos, é sobre viver melhor.","A noite bem dormida é o primeiro passo de um dia produtivo.","Seu futuro agradece cada hora de sono que você respeita hoje."])
@@ -249,21 +247,21 @@ class DormirCedo:
             t2 = t2.replace(day=2)
         return t2 - t1
 
-class AtividadeFisica:
+class AtividadeFisica (Habito):
     nome = 'atividade fisica'
     def motivar(self):
         return random.choice(["Seu corpo pode até pedir para parar, mas sua mente decide continuar.","Um treino hoje é um passo a menos em direção à sua melhor versão.","Disciplina vence a motivação quando a vontade acaba.","Você não treina só o corpo, treina a mente também.","O esforço de hoje é o resultado de amanhã.","Não espere sentir vontade, crie o hábito.","Cada gota de suor te aproxima do seu objetivo.","O limite começa onde sua determinação acaba.","Treinar é investir em você mesmo.","Você é mais forte do que a desculpa que tentou te parar."])
     def calcular_IMC(self,peso,altura):
         return peso/(altura**2)
 
-class Leitura:
+class Leitura (Habito):
     nome = 'leitura'
     def motivar(self):
         return random.choice(["Quem lê vive mil vidas em uma só.", "Ler é treinar a mente para enxergar o mundo de outra forma.", "Um livro por dia afasta a ignorância para sempre.", "A leitura abre portas que a realidade ainda não mostrou.", "Quem lê nunca está sozinho.", "Cada página lida é um passo no seu crescimento.", "Livros são academias para a mente.", "Ler hoje é pensar melhor amanhã.", "A leitura transforma curiosidade em conhecimento.", "Quanto mais você lê, mais você entende o mundo."])
     def calcular_media(self,paginas,dias):
         return paginas/dias
     
-class Meditacao:
+class Meditacao (Habito):
     nome = 'meditacao'
     def motivar(self):
         return random.choice(["Respire fundo e permita que sua mente encontre a calma.", "Cada respiração é uma oportunidade de recomeçar.", "O silêncio interior é uma fonte inesgotável de força.", "Você não precisa controlar tudo; apenas esteja presente.", "A paz que você procura já existe dentro de você.", "Deixe os pensamentos passarem como nuvens no céu.", "Seu bem-estar começa com um momento de atenção plena.", "Respire tranquilidade, expire preocupações.", "A serenidade cresce quando você desacelera."])
@@ -282,40 +280,26 @@ class Conquista:
     def __init__(self,nome):
         self.nome = nome
 
-def atualizar_sistema(usuario):
-    lista_nova = []
-    with open('usuarios.csv',"r") as arquivo:
-        leitor = csv.reader(arquivo)
-        for linha in leitor:
-            if linha[0].lower() != usuario.nome.lower():
-                lista_nova.append(linha)
-            else:
-                lista_nova.append([usuario.nome,usuario.senha,str(usuario.caracteristicas),str(usuario.atividades),str(usuario.habitos),str(usuario.conquistas)])
-    with open('usuarios.csv','w', newline='') as arquivo:
-        escritor = csv.writer(arquivo)
-        escritor.writerows(lista_nova)
-
 class Usuario (AtividadeMixin):
     def __init__(self,nome, senha, caracterizacao,sistema):
         self.sistema = sistema
         self.nome = nome
-        self.senha = senha
+        self.__senha = senha
         self.caracteristicas= caracterizacao
         self.atividades = []
         self.habitos = []
         self.conquistas = []
         self.atividades.append(self.registrar_atividade('criou conta'))
         sistema+= self
-
-    def prever(self,modelo):
-        if modelo == 'knn':
-            self.atividades.append(self.registrar_atividade('fez previsão com KNeighbors'))
-            atualizar_sistema(self)
-            return Knn('knn').prever(self.caracteristicas)
-        elif modelo == 'arvore':
-            self.atividades.append(self.registrar_atividade('fez previsão com RandomForest'))
-            atualizar_sistema(self)
-            return Arvore('arvore').prever(self.caracteristicas)
+        
+    @property
+    def senha(self):
+        return self.__senha
+    
+    def prever(self):
+        self.atividades.append(self.registrar_atividade('fez previsão com RandomForest'))
+        atualizar_sistema(self)
+        return ModeloIA().prever(self.caracteristicas)
 
     def adicionar_conquista(self, nome):
         self.conquistas.append(Conquista(nome))
@@ -328,8 +312,8 @@ class Usuario (AtividadeMixin):
         atualizar_sistema(self)
 
 class Sistema:
-    def __init__(self):
-        self.senha = 'DemetriosMelhorProfessor'
+    def __init__(self,senha):
+        self.__senha = senha
         with open('usuarios.csv',"r") as lista_usuarios:
             users = list(csv.reader(lista_usuarios, delimiter=","))
         self.usuarios = users
@@ -367,7 +351,7 @@ class AcessarSistema(abc.ABC):
         pass
 
 class Dev(Usuario,AcessarSistema):
-    senha_dev = 'DevDoSistema'
+    __senha_dev = 'DevDoSistema'
     
     def listar_usuarios(self,sistema):
         return sistema.usuarios
@@ -384,270 +368,9 @@ class Dev(Usuario,AcessarSistema):
         Sistema.senha = nova_senha
 
 class Mod(Usuario,AcessarSistema):
-    senha_mod = 'ModDoSistema'
+    __senha_mod = 'ModDoSistema'
     def listar_usuarios(self,sistema):
         nomes_usuarios = []
         for user in sistema.usuarios:
             nomes_usuarios.append(user[0])
         return nomes_usuarios
-
-# ==========================
-# Sistema
-# ==========================
-sistema = Sistema()
-
-# ==========================
-# Caracterizações
-# ==========================
-carac_clara = Caracterizacao(
-    18,
-    "Female",
-    2,
-    4.5,
-    6.0,
-    8.5,
-    5.0,
-    4.0,
-    2.0,
-    7.5,
-    4.0,
-    8.0,
-    5.0,
-    6.0,
-    3.0,
-    7.0
-)
-
-carac_joao = Caracterizacao(
-    20,
-    "Male",
-    4,
-    8.0,
-    9.0,
-    7.5,
-    9.0,
-    8.0,
-    6.5,
-    5.5,
-    2.0,
-    5.0,
-    9.0,
-    8.0,
-    8.5,
-    9.0
-)
-
-carac_mia = Caracterizacao(
-    19,
-    "Female",
-    3,
-    3.5,
-    4.0,
-    9.0,
-    3.0,
-    2.0,
-    1.0,
-    8.5,
-    6.0,
-    9.0,
-    4.0,
-    5.0,
-    2.0,
-    5.0
-)
-
-# ==========================
-# Usuários
-# ==========================
-clara = Usuario(
-    "clara",
-    "123",
-    carac_clara,
-    sistema
-)
-
-joao = Usuario(
-    "joao",
-    "456",
-    carac_joao,
-    sistema
-)
-
-mia = Usuario(
-    "mia",
-    "789",
-    carac_mia,
-    sistema
-)
-
-# ==========================
-# Dev e Moderador
-# (caso seu __init__ já tenha sido corrigido)
-# ==========================
-dev = Dev(
-    "Roberto",
-    Dev.senha_dev,
-    carac_clara,
-    sistema
-)
-
-mod = Mod(
-    "Carlos",
-    Mod.senha_mod,
-    carac_mia,
-    sistema
-)
-
-# ==========================
-# Hábitos
-# ==========================
-dormir = DormirCedo()
-atividade = AtividadeFisica()
-leitura = Leitura()
-meditacao = Meditacao()
-
-print("\n========== TESTE DOS HÁBITOS ==========")
-
-print("\nMotivação para dormir cedo:")
-print(dormir.motivar())
-
-print("\nMotivação para atividade física:")
-print(atividade.motivar())
-
-print("\nMotivação para leitura:")
-print(leitura.motivar())
-
-print("\nMotivação para meditação:")
-print(meditacao.motivar())
-
-
-print("\n========== TESTE DOS CÁLCULOS ==========")
-
-print("\nTempo de sono (23:30 às 07:15):")
-print(dormir.calular_sono("23:30", "07:15"))
-
-print("\nIMC (65kg, 1.70m):")
-print(atividade.calcular_IMC(65, 1.70))
-
-print("\nMédia de leitura (320 páginas em 8 dias):")
-print(leitura.calcular_media(320, 8))
-
-print("\nTempo de meditação (18:30 às 19:00):")
-print(meditacao.calcular_tempo_meditacao("18:30", "19:00"))
-
-
-print("\n========== TESTE DO MIXIN ==========")
-
-print("\nRegistro de atividade:")
-print(clara.registrar_atividade("Entrou no sistema"))
-
-
-print("\n========== TESTE DAS CONQUISTAS ==========")
-
-clara.adicionar_conquista("Primeiro Login")
-clara.adicionar_conquista("Primeira Previsão")
-
-print("\nConquistas da clara:")
-print(clara.conquistas)
-
-print("\nHistórico de atividades da clara:")
-print(clara.atividades)
-
-# ==========================
-# Hábitos (teste no usuário)
-# ==========================
-
-print("\n========== TESTE DOS HÁBITOS NOS USUÁRIOS ==========")
-
-clara.adicionar_habito(dormir)
-clara.adicionar_habito(atividade)
-clara.adicionar_habito(leitura)
-clara.adicionar_habito(meditacao)
-
-print("\nHábitos da clara:")
-for h in clara.habitos:
-    print(h.nome)
-
-print("\nAtividades da clara após hábitos:")
-print(clara.atividades)
-
-print("\n========== TESTE DA IA ==========")
-
-print("\nPrevisão usando KNN:")
-print(clara.prever("knn"))
-
-print("\nPrevisão usando Random Forest:")
-print(joao.prever("arvore"))
-
-
-print("\n========== TESTE DO SISTEMA ==========")
-
-print("\nLista de usuários armazenados:")
-print(sistema.usuarios)
-
-
-print("\n========== TESTE DO MODERADOR ==========")
-
-print("\nUsuários visíveis para o moderador:")
-print(mod.listar_usuarios(sistema))
-
-
-print("\n========== TESTE DO DESENVOLVEDOR ==========")
-
-print("\nLista completa de usuários:")
-print(dev.listar_usuarios(sistema))
-
-
-
-print("Usuário adicionado.")
-
-
-print("\nExcluindo joao pelo desenvolvedor...")
-dev.excluir_usuario(sistema, joao)
-
-print("Usuário removido.")
-
-
-print("\nAlterando senha mestre do sistema...")
-dev.mudar_senha("NovaSenhaDoSistema")
-
-print("Nova senha do sistema:")
-print(Sistema.senha)
-
-
-print("\n========== NOVOS TESTES ==========")
-
-print("\nNova previsão da clara:")
-print(clara.prever("knn"))
-
-clara.adicionar_conquista("Usuário Iniciante")
-
-print("\nNova motivação para dormir cedo:")
-print(dormir.motivar())
-
-print("\nNovo cálculo de sono (22:45 às 06:30):")
-print(dormir.calular_sono("22:45", "06:30"))
-
-print("\nNovo cálculo de IMC (72kg, 1.78m):")
-print(atividade.calcular_IMC(72, 1.78))
-
-print("\nNova média de leitura (450 páginas em 15 dias):")
-print(leitura.calcular_media(450, 15))
-
-print("\nNovo tempo de meditação (19:00 às 19:40):")
-print(meditacao.calcular_tempo_meditacao("19:00", "19:40"))
-
-
-print("\n========== VERIFICAÇÃO FINAL ==========")
-
-print("\nUsuários visíveis para o moderador:")
-print(mod.listar_usuarios(sistema))
-
-print("\nUsuários visíveis para o desenvolvedor:")
-print(dev.listar_usuarios(sistema))
-
-print("\nTentando excluir joao novamente...")
-dev.excluir_usuario(sistema, joao)
-
-print("\nLista final de usuários:")
-print(mod.listar_usuarios(sistema))
