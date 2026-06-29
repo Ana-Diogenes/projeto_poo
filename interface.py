@@ -252,8 +252,6 @@ class TelaCaracterizacao1(ctk.CTkFrame):
         self.ansiedade = self.criar_campo(coluna_direita, "Nível ansiedade")
         avancar = ctk.CTkButton(conteudo, text=">", width=30, height=30, corner_radius=35, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 28, "bold"), command=self.controlador.mostrar_caracterizacao2)
         avancar.place(relx=0.98, rely=0.97, anchor="se")
-        voltar = ctk.CTkButton(conteudo, text="<", width=30, height=30, corner_radius=35, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 28, "bold"), command=self.controlador.mostrar_cadastro)
-        voltar.place(relx=0.02, rely=0.97, anchor="sw")
 
 # ================== TELA CARACTERIZAÇÃO 2 ==================
 
@@ -309,8 +307,6 @@ class TelaCaracterizacao2(ctk.CTkFrame):
         self.familia = self.criar_campo(coluna_direita, "Expectativa familiar")
         avancar = ctk.CTkButton(conteudo, text=">", width=30, height=30, corner_radius=35, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 28, "bold"), command=self.controlador.mostrar_principal)
         avancar.place(relx=0.98, rely=0.97, anchor="se")
-        voltar = ctk.CTkButton(conteudo, text="<", width=30, height=30, corner_radius=35, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 28, "bold"), command=self.controlador.mostrar_caracterizacao1)
-        voltar.place(relx=0.02, rely=0.97, anchor="sw")
 
 # ================== TELA BURNOUT ==================
 
@@ -656,6 +652,255 @@ class TelaDormirCedo(ctk.CTkFrame):
         sair = ctk.CTkButton(conteudo, text="Voltar", width=90, height=35, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 14, "bold"), command=self.controlador.mostrar_principal)
         sair.pack(anchor="e", pady=15)
 
+# ================== TELA ATIVIDADE FISICA ==================
+
+class TelaAtividadeFisica(ctk.CTkFrame):
+    def __init__(self, master, controlador):
+        super().__init__(master, fg_color=COR_FUNDO)
+        self.controlador = controlador
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
+        self.criar_barra()
+        self.criar_conteudo()
+
+    def criar_barra(self):
+        barra = ctk.CTkFrame(self, width=55, fg_color="transparent", corner_radius=0)
+        barra.grid(row=0, column=0, sticky="ns")
+        barra.grid_propagate(False)
+        for i, cor in enumerate(PALETA):
+            barra.grid_rowconfigure(i, weight=1)
+            faixa = ctk.CTkFrame(barra, fg_color=cor, corner_radius=0)
+            faixa.grid(row=i, column=0, sticky="nsew")
+
+    def calcular_sono(self):
+        try:
+            h_dormir, m_dormir = map(int, self.entrada_dormir.get().split(":"))
+            h_acordar, m_acordar = map(int, self.entrada_acordar.get().split(":"))
+            inicio = h_dormir * 60 + m_dormir
+            fim = h_acordar * 60 + m_acordar
+            if fim < inicio:
+                fim += 24 * 60
+            horas = (fim - inicio) / 60
+            self.resultado.configure(text=f"{horas:.2f} IMC bom")
+        except:
+            self.resultado.configure(text="Horário inválido")
+
+    def criar_conteudo(self):
+        conteudo = ctk.CTkFrame(self, fg_color="transparent")
+        conteudo.grid(row=0, column=1, sticky="nsew", padx=25, pady=20)
+        
+        titulo = ctk.CTkLabel(conteudo, text="Atidade física", font=("Arial", 42, "bold"), text_color=COR_TITULO)
+        titulo.pack(anchor="w", pady=(10, 8))
+        
+        frase = ctk.CTkLabel(conteudo, text="Seu corpo pode até pedir para parar, mas sua mente decide continuar.", font=("Arial", 18, "italic"), text_color=COR_TITULO, fg_color=COR_CAIXA, corner_radius=5, height=45, anchor="w")
+        frase.pack(fill="x", pady=(0, 35), ipady=10, padx=(0, 60))
+        
+        caixa = ctk.CTkFrame(conteudo, fg_color=COR_TITULO, corner_radius=5)
+        caixa.pack(fill="x", padx=(0, 60))
+        
+        subtitulo = ctk.CTkLabel(caixa, text="Calcular IMC", font=("Arial", 24, "bold"), text_color=COR_TEXTO_BOTAO)
+        subtitulo.pack(anchor="w", padx=35, pady=(20, 20))
+        
+        linha = ctk.CTkFrame(caixa, fg_color="transparent")
+        linha.pack(fill="x", padx=35)
+        
+        bloco1 = ctk.CTkFrame(linha, fg_color="transparent")
+        bloco1.pack(side="left", padx=(0, 20))
+        
+        ctk.CTkLabel(bloco1, text="Peso", font=("Arial", 16), text_color="#FFD7C5").pack(anchor="w")
+        
+        self.entrada_dormir = ctk.CTkEntry(bloco1, width=220, height=40, fg_color=COR_FUNDO, border_width=0, text_color=COR_TEXTO)
+        self.entrada_dormir.pack(pady=(5, 0))
+        
+        bloco2 = ctk.CTkFrame(linha, fg_color="transparent")
+        bloco2.pack(side="left", padx=(0, 20))
+        
+        ctk.CTkLabel(bloco2, text="Altura", font=("Arial", 16), text_color="#FFD7C5").pack(anchor="w")
+        
+        self.entrada_acordar = ctk.CTkEntry(bloco2, width=220, height=40, fg_color=COR_FUNDO, border_width=0, text_color=COR_TEXTO)
+        self.entrada_acordar.pack(pady=(5, 0))
+        
+        botao = ctk.CTkButton(linha, text="Enviar", width=140, height=45, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TITULO, font=("Arial", 18, "bold"), command=self.calcular_sono)
+        botao.pack(side="left", pady=(25, 0))
+        
+        resultado_frame = ctk.CTkFrame(caixa, fg_color=COR_FUNDO, width=440, height=95, corner_radius=5)
+        resultado_frame.pack(pady=30)
+        resultado_frame.pack_propagate(False)
+        
+        ctk.CTkLabel(resultado_frame, text="Resultado:", font=("Arial", 20), text_color=COR_TITULO).place(x=10, y=10)
+        
+        self.resultado = ctk.CTkLabel(resultado_frame, text="--.- IMC", font=("Arial", 34, "bold"), text_color=COR_TITULO)
+        self.resultado.place(relx=0.5, rely=0.55, anchor="center")
+        
+        sair = ctk.CTkButton(conteudo, text="Voltar", width=90, height=35, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 14, "bold"), command=self.controlador.mostrar_principal)
+        sair.pack(anchor="e", pady=15)
+
+# ================== TELA LEITURA ==================
+
+class TelaLeitura(ctk.CTkFrame):
+    def __init__(self, master, controlador):
+        super().__init__(master, fg_color=COR_FUNDO)
+        self.controlador = controlador
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
+        self.criar_barra()
+        self.criar_conteudo()
+
+    def criar_barra(self):
+        barra = ctk.CTkFrame(self, width=55, fg_color="transparent", corner_radius=0)
+        barra.grid(row=0, column=0, sticky="ns")
+        barra.grid_propagate(False)
+        for i, cor in enumerate(PALETA):
+            barra.grid_rowconfigure(i, weight=1)
+            faixa = ctk.CTkFrame(barra, fg_color=cor, corner_radius=0)
+            faixa.grid(row=i, column=0, sticky="nsew")
+
+    def calcular_sono(self):
+        try:
+            h_dormir, m_dormir = map(int, self.entrada_dormir.get().split(":"))
+            h_acordar, m_acordar = map(int, self.entrada_acordar.get().split(":"))
+            inicio = h_dormir * 60 + m_dormir
+            fim = h_acordar * 60 + m_acordar
+            if fim < inicio:
+                fim += 24 * 60
+            horas = (fim - inicio) / 60
+            self.resultado.configure(text=f"{horas:.2f} horas")
+        except:
+            self.resultado.configure(text="Horário inválido")
+
+    def criar_conteudo(self):
+        conteudo = ctk.CTkFrame(self, fg_color="transparent")
+        conteudo.grid(row=0, column=1, sticky="nsew", padx=25, pady=20)
+        
+        titulo = ctk.CTkLabel(conteudo, text="Leitura", font=("Arial", 42, "bold"), text_color=COR_TITULO)
+        titulo.pack(anchor="w", pady=(10, 8))
+        
+        frase = ctk.CTkLabel(conteudo, text="Quem lê vive mil vidas em uma só.", font=("Arial", 18, "italic"), text_color=COR_TITULO, fg_color=COR_CAIXA, corner_radius=5, height=45, anchor="w")
+        frase.pack(fill="x", pady=(0, 35), ipady=10, padx=(0, 60))
+        
+        caixa = ctk.CTkFrame(conteudo, fg_color=COR_TITULO, corner_radius=5)
+        caixa.pack(fill="x", padx=(0, 60))
+        
+        subtitulo = ctk.CTkLabel(caixa, text="Calcular média de páginas lidas por dia", font=("Arial", 24, "bold"), text_color=COR_TEXTO_BOTAO)
+        subtitulo.pack(anchor="w", padx=35, pady=(20, 20))
+        
+        linha = ctk.CTkFrame(caixa, fg_color="transparent")
+        linha.pack(fill="x", padx=35)
+        
+        bloco1 = ctk.CTkFrame(linha, fg_color="transparent")
+        bloco1.pack(side="left", padx=(0, 20))
+        
+        ctk.CTkLabel(bloco1, text="Páginas", font=("Arial", 16), text_color="#FFD7C5").pack(anchor="w")
+        
+        self.entrada_dormir = ctk.CTkEntry(bloco1, width=220, height=40, fg_color=COR_FUNDO, border_width=0, text_color=COR_TEXTO)
+        self.entrada_dormir.pack(pady=(5, 0))
+        
+        bloco2 = ctk.CTkFrame(linha, fg_color="transparent")
+        bloco2.pack(side="left", padx=(0, 20))
+        
+        ctk.CTkLabel(bloco2, text="Dias", font=("Arial", 16), text_color="#FFD7C5").pack(anchor="w")
+        
+        self.entrada_acordar = ctk.CTkEntry(bloco2, width=220, height=40, fg_color=COR_FUNDO, border_width=0, text_color=COR_TEXTO)
+        self.entrada_acordar.pack(pady=(5, 0))
+        
+        botao = ctk.CTkButton(linha, text="Enviar", width=140, height=45, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TITULO, font=("Arial", 18, "bold"), command=self.calcular_sono)
+        botao.pack(side="left", pady=(25, 0))
+        
+        resultado_frame = ctk.CTkFrame(caixa, fg_color=COR_FUNDO, width=440, height=95, corner_radius=5)
+        resultado_frame.pack(pady=30)
+        resultado_frame.pack_propagate(False)
+        
+        ctk.CTkLabel(resultado_frame, text="Resultado:", font=("Arial", 20), text_color=COR_TITULO).place(x=10, y=10)
+        
+        self.resultado = ctk.CTkLabel(resultado_frame, text="--.- páginas por dia", font=("Arial", 34, "bold"), text_color=COR_TITULO)
+        self.resultado.place(relx=0.5, rely=0.55, anchor="center")
+        
+        sair = ctk.CTkButton(conteudo, text="Voltar", width=90, height=35, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 14, "bold"), command=self.controlador.mostrar_principal)
+        sair.pack(anchor="e", pady=15)
+
+# ================== TELA MEDITACAO ==================
+
+class TelaMeditacao(ctk.CTkFrame):
+    def __init__(self, master, controlador):
+        super().__init__(master, fg_color=COR_FUNDO)
+        self.controlador = controlador
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
+        self.criar_barra()
+        self.criar_conteudo()
+
+    def criar_barra(self):
+        barra = ctk.CTkFrame(self, width=55, fg_color="transparent", corner_radius=0)
+        barra.grid(row=0, column=0, sticky="ns")
+        barra.grid_propagate(False)
+        for i, cor in enumerate(PALETA):
+            barra.grid_rowconfigure(i, weight=1)
+            faixa = ctk.CTkFrame(barra, fg_color=cor, corner_radius=0)
+            faixa.grid(row=i, column=0, sticky="nsew")
+
+    def calcular_sono(self):
+        try:
+            h_dormir, m_dormir = map(int, self.entrada_dormir.get().split(":"))
+            h_acordar, m_acordar = map(int, self.entrada_acordar.get().split(":"))
+            inicio = h_dormir * 60 + m_dormir
+            fim = h_acordar * 60 + m_acordar
+            if fim < inicio:
+                fim += 24 * 60
+            horas = (fim - inicio) / 60
+            self.resultado.configure(text=f"{horas:.2f} horas")
+        except:
+            self.resultado.configure(text="Horário inválido")
+
+    def criar_conteudo(self):
+        conteudo = ctk.CTkFrame(self, fg_color="transparent")
+        conteudo.grid(row=0, column=1, sticky="nsew", padx=25, pady=20)
+        
+        titulo = ctk.CTkLabel(conteudo, text="Meditação", font=("Arial", 42, "bold"), text_color=COR_TITULO)
+        titulo.pack(anchor="w", pady=(10, 8))
+        
+        frase = ctk.CTkLabel(conteudo, text="Respire fundo e permita que sua mente encontre a calma.", font=("Arial", 18, "italic"), text_color=COR_TITULO, fg_color=COR_CAIXA, corner_radius=5, height=45, anchor="w")
+        frase.pack(fill="x", pady=(0, 35), ipady=10, padx=(0, 60))
+        
+        caixa = ctk.CTkFrame(conteudo, fg_color=COR_TITULO, corner_radius=5)
+        caixa.pack(fill="x", padx=(0, 60))
+        
+        subtitulo = ctk.CTkLabel(caixa, text="Calcular tempo meditação", font=("Arial", 24, "bold"), text_color=COR_TEXTO_BOTAO)
+        subtitulo.pack(anchor="w", padx=35, pady=(20, 20))
+        
+        linha = ctk.CTkFrame(caixa, fg_color="transparent")
+        linha.pack(fill="x", padx=35)
+        
+        bloco1 = ctk.CTkFrame(linha, fg_color="transparent")
+        bloco1.pack(side="left", padx=(0, 20))
+        
+        ctk.CTkLabel(bloco1, text="Hora do inicio da meditação", font=("Arial", 16), text_color="#FFD7C5").pack(anchor="w")
+        
+        self.entrada_dormir = ctk.CTkEntry(bloco1, width=220, height=40, fg_color=COR_FUNDO, border_width=0, text_color=COR_TEXTO)
+        self.entrada_dormir.pack(pady=(5, 0))
+        
+        bloco2 = ctk.CTkFrame(linha, fg_color="transparent")
+        bloco2.pack(side="left", padx=(0, 20))
+        
+        ctk.CTkLabel(bloco2, text="Hora do fim da meditação", font=("Arial", 16), text_color="#FFD7C5").pack(anchor="w")
+        
+        self.entrada_acordar = ctk.CTkEntry(bloco2, width=220, height=40, fg_color=COR_FUNDO, border_width=0, text_color=COR_TEXTO)
+        self.entrada_acordar.pack(pady=(5, 0))
+        
+        botao = ctk.CTkButton(linha, text="Enviar", width=140, height=45, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TITULO, font=("Arial", 18, "bold"), command=self.calcular_sono)
+        botao.pack(side="left", pady=(25, 0))
+        
+        resultado_frame = ctk.CTkFrame(caixa, fg_color=COR_FUNDO, width=440, height=95, corner_radius=5)
+        resultado_frame.pack(pady=30)
+        resultado_frame.pack_propagate(False)
+        
+        ctk.CTkLabel(resultado_frame, text="Resultado:", font=("Arial", 20), text_color=COR_TITULO).place(x=10, y=10)
+        
+        self.resultado = ctk.CTkLabel(resultado_frame, text="00.00 horas", font=("Arial", 34, "bold"), text_color=COR_TITULO)
+        self.resultado.place(relx=0.5, rely=0.55, anchor="center")
+        
+        sair = ctk.CTkButton(conteudo, text="Voltar", width=90, height=35, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 14, "bold"), command=self.controlador.mostrar_principal)
+        sair.pack(anchor="e", pady=15)
+
 # ================== TELA PRINCIPAL ==================
 
 class TelaPrincipal(ctk.CTkFrame):
@@ -686,7 +931,13 @@ class TelaPrincipal(ctk.CTkFrame):
         for h in habitos:
             if h == 'Dormir cedo':
                 comando = self.controlador.mostrar_dormir
-            else:
+            elif h == "Atividade física":
+                comando = self.controlador.mostrar_atividade_fisica
+            elif h =='Leitura':
+                comando = self.controlador.mostrar_leitura
+            elif h =="Meditação":
+                comando = self.controlador.mostrar_meditacao
+            else: 
                 comando = None
             botao = ctk.CTkButton(caixa, text=h, width=240, height=45, corner_radius=8, fg_color=COR_FUNDO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial",18), command=comando)
             botao.pack(pady=6)
@@ -727,6 +978,8 @@ class TelaPrincipal(ctk.CTkFrame):
         self.criar_botoes(direita)
         sair = ctk.CTkButton(conteudo, text="Sair", width=80, height=30, corner_radius=10, fg_color=COR_CAMPO, hover_color=COR_HOVER, text_color=COR_TEXTO, font=("Arial", 14, "bold"), command=self.controlador.mostrar_inicial)
         sair.place(relx=0.98, rely=1, anchor="se")
+        configuracoes = ctk.CTkButton(conteudo, text="⏣", height=30,width=30, corner_radius=10, fg_color=COR_FUNDO,bg_color=COR_FUNDO,hover_color=COR_CAIXA, text_color=COR_TEXTO, font=("Arial", 40, "bold"), command=self.controlador.mostrar_inicial)
+        configuracoes.place(relx=1.0, x=-10, y=10, anchor="ne")  
 
 # ================== CONTROLADOR ==================
 
@@ -778,6 +1031,15 @@ class App(ctk.CTk):
     def mostrar_dormir(self):
         self.mostrar_tela(TelaDormirCedo)
     
+    def mostrar_atividade_fisica(self):
+        self.mostrar_tela(TelaAtividadeFisica)
+    
+    def mostrar_leitura(self):
+        self.mostrar_tela(TelaLeitura)
+    
+    def mostrar_meditacao(self):
+        self.mostrar_tela(TelaMeditacao)
+        
     def mostrar_principal(self):
         self.mostrar_tela(TelaPrincipal)
         
