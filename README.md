@@ -4,7 +4,7 @@
 ![POO](https://img.shields.io/badge/OOP-Project-red)
 ![Status](https://img.shields.io/badge/status-concluded-success)
 
-# 🧠 Sinapse // Projeto Final Programação Orientada a Objetos
+# Sinapse // Projeto Final Programação Orientada a Objetos
 
 > **Sistema inteligente para monitoramento de hábitos e predição do risco de Burnout utilizando Inteligência Artificial.**
 
@@ -14,24 +14,24 @@ Além da predição, o sistema permite acompanhar hábitos, registrar atividades
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
-- 👤 Cadastro e autenticação de usuários
-- 📋 Coleta de informações pessoais e acadêmicas
-- 🤖 Predição do risco de Burnout utilizando **Random Forest**
-- 💤 Gerenciamento de hábitos saudáveis
+- Cadastro e autenticação de usuários
+- Coleta de informações pessoais e acadêmicas
+- Predição do risco de Burnout utilizando **Random Forest**
+- Gerenciamento de hábitos saudáveis
   - Dormir cedo
   - Atividade física
   - Leitura
   - Meditação
-- 📈 Registro de atividades realizadas
-- 🏆 Sistema de conquistas
-- 📚 Informações educativas sobre Síndrome de Burnout
-- 🛠️ Área administrativa para desenvolvedores e moderadores
+- Registro de atividades realizadas
+- Sistema de conquistas
+- Informações educativas sobre Síndrome de Burnout
+- Área administrativa para desenvolvedores e moderadores
 
 ---
 
-## 🧩 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - Python 3
 - CustomTkinter
@@ -42,7 +42,7 @@ Além da predição, o sistema permite acompanhar hábitos, registrar atividades
 
 ---
 
-## 🏗️ Arquitetura do Projeto
+## Arquitetura do Projeto
 
 O sistema foi desenvolvido seguindo conceitos de **Programação Orientada a Objetos**, utilizando:
 
@@ -56,7 +56,7 @@ O sistema foi desenvolvido seguindo conceitos de **Programação Orientada a Obj
 
 Principais classes:
 
-```
+```text
 Sistema
 │
 ├── Usuario
@@ -78,60 +78,23 @@ Sistema
 
 ---
 
-## 🧠 Inteligência Artificial
+## Inteligência Artificial
 
 O sistema utiliza um modelo de classificação baseado em **Random Forest**, treinado com um conjunto de dados contendo informações relacionadas à saúde mental de estudantes.
 
-A predição considera fatores como:
-
-- idade;
-- gênero;
-- ano acadêmico;
-- horas de estudo;
-- pressão em provas;
-- desempenho acadêmico;
-- nível de estresse;
-- ansiedade;
-- depressão;
-- horas de sono;
-- atividade física;
-- suporte social;
-- tempo de tela;
-- uso da internet;
-- estresse financeiro;
-- expectativa familiar.
-
 Ao final, o modelo classifica o usuário em um dos níveis de risco:
 
-- 🟢 Low
-- 🟡 Medium
-- 🔴 High
+- Low
+- Medium
+- High
+
+**Dataset completo disponível aqui: https://www.kaggle.com/datasets/sharmajicoder/student-mental-health-and-burnout**
 
 ---
 
-## 💻 Interface
+## Estrutura do Projeto
 
-A interface foi construída utilizando **CustomTkinter**, proporcionando uma experiência moderna e intuitiva.
-
-O sistema possui telas para:
-
-- Tela inicial
-- Login
-- Cadastro
-- Caracterização do usuário
-- Tela principal
-- Resultado da IA
-- Hábitos
-- Atividades
-- Conquistas
-- Informações sobre Burnout
-- Área administrativa
-
----
-
-## 📂 Estrutura do Projeto
-
-```
+```text
 Sinapse/
 │
 ├── interface.py
@@ -144,8 +107,7 @@ Sinapse/
 
 ---
 
-
-## 🎯 Objetivos
+## Objetivos
 
 O projeto busca:
 
@@ -156,10 +118,10 @@ O projeto busca:
 
 ---
 
-## 📚 Conceitos Aplicados
+## Conceitos Aplicados
 
 - Programação Orientada a Objetos
-- Interface Gráfica
+- Interface Gráfica (CustomTkinter)
 - Machine Learning
 - Engenharia de Software
 - Manipulação de arquivos CSV
@@ -174,4 +136,3 @@ O projeto busca:
 ---
 
 <img width="8192" height="3558" alt="Diagrama-de-clases-sinapse-2026-07-17-092812" src="https://github.com/user-attachments/assets/b945c106-9c0c-4f90-b2d7-7b39fdd7dfaf" />
-
